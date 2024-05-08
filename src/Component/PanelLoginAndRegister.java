@@ -12,6 +12,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.UUID;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -67,7 +68,7 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 String userName = txtUser.getText().trim();
                 String email = txtEmail.getText().trim();
                 String password = String.valueOf(txtPassword.getPassword());
-                user = new ModelUser(0,userName,email,password);
+                user = new ModelUser(UUID.randomUUID(),userName,email,password);
             }
         });
     }

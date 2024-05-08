@@ -21,7 +21,7 @@ public class ServiceMail {
         prop.put("mail.smtp.auth", "true");
         prop.put("mail.smtp.starttls.enable", "true");
         String username = "khaikhungkhiep12@gmail.com";
-        String password = "arzg pqno egts htag";    //  Your email password here
+        String password = "fytb mmrb vpwx dlfc";    //  Your email password here
         Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -37,13 +37,12 @@ public class ServiceMail {
             Transport.send(message);
             ms.setSuccess(true);
         } catch (MessagingException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
             if (e.getMessage().equals("Invalid Addresses")) {
                 ms.setMessage("Invalid email");
             } else {
                 ms.setMessage("Error");
-            }
-        }
+            }}  
         return ms;
     }
 }

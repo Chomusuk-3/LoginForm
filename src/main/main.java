@@ -12,11 +12,13 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import javax.swing.JLayeredPane;
+import model.ModelMessage;
 import model.ModelUser;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
+import service.ServiceMail;
 import service.ServiceUser;
 
 
@@ -113,6 +115,24 @@ public class main extends javax.swing.JFrame {
                 }
             }
         });
+        verifyCode.addEventButtonOK(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent ae) {
+                try {
+                    ModelUser user = LoginAndRegister.getUser();
+                    if(service.verifyCodeWithUser(user.getUserName(), verifyCode.getInputCode())){
+                        service.doneVerify(user.getUserName());
+                        showMessage(Message.MessageType.SUCCESS, "Register success");
+                        verifyCode.setVisible(false);
+                    }else{
+                        showMessage(Message.MessageType.ERROR, "Verify code incorrect");
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    showMessage(Message.MessageType.ERROR, "Error");
+                }
+            }
+        });
     }
     
     private void register(){
@@ -124,7 +144,7 @@ public class main extends javax.swing.JFrame {
                 showMessage(Message.MessageType.ERROR, "Email already exit");
             }else{
                 service.insertUser(user);
-                sendMain();
+                sendMain(user);
             }
         } catch (SQLException e) {
             showMessage(Message.MessageType.ERROR, "Error Register");
@@ -133,8 +153,21 @@ public class main extends javax.swing.JFrame {
         
     }
     
-    private void sendMain(){
-        
+    private void sendMain(ModelUser user){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+               loading.setVisible(true);
+               ModelMessage ms = new ServiceMail().sendMain(user.getEmail(), user.getVerifyCode());
+               if(ms.isSuccess()){
+                   loading.setVisible(false);
+                   verifyCode.setVisible(true);
+               }else{
+                   loading.setVisible(false);
+                   showMessage(Message.MessageType.ERROR, ms.getMessage());
+               }
+            }
+        }).start();
     }
     
     private void showMessage(Message.MessageType messageType, String message){
