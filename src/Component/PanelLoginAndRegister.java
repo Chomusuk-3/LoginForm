@@ -16,21 +16,27 @@ import java.util.UUID;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import model.ModelLogin;
 import model.ModelUser;
 import net.miginfocom.swing.MigLayout;
 
 
 public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
+    public ModelLogin getDataLogin() {
+        return dataLogin;
+    }
+
     public ModelUser getUser() {
         return user;
     }
     private ModelUser user;
+    private ModelLogin dataLogin;
     
-    public PanelLoginAndRegister(ActionListener eventRegister) {
+    public PanelLoginAndRegister(ActionListener eventRegister, ActionListener eventLogin){
         initComponents();
         initRegister(eventRegister);
-        initLogin();
+        initLogin(eventLogin);
         login.setVisible(false);
         register.setVisible(true);
     }
@@ -65,14 +71,15 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                String userID = txtUser.getText().trim();
                 String userName = txtUser.getText().trim();
                 String email = txtEmail.getText().trim();
                 String password = String.valueOf(txtPassword.getPassword());
-                user = new ModelUser(UUID.randomUUID(),userName,email,password);
+                user = new ModelUser(userID,userName,email,password);
             }
         });
     }
-    private void initLogin(){
+    private void initLogin(ActionListener eventLogin){
         login.setLayout(new MigLayout("wrap","push[center]push","push[]25[]10[]10[]25[]push"));
         JLabel label = new JLabel("Sign In");
         label.setFont(new Font("sansserif", 1, 30));
@@ -99,8 +106,17 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         Button cmd = new Button();
         cmd.setBackground(new Color(21, 244, 250));
         cmd.setForeground(new Color(250,250,250));
+        cmd.addActionListener(eventLogin);
         cmd.setText("SIGN IN");
         login.add(cmd,"w 40%, h 40");
+        cmd.addActionListener(new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+               String email = txtEmail.getText().trim();
+               String password = String.valueOf(txtPassword.getPassword());
+               dataLogin = new ModelLogin(email,password);
+           }
+       });
     }
     public void showRegister(boolean show){
         if(show){

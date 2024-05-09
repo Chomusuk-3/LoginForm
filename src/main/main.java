@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import javax.swing.JLayeredPane;
+import model.ModelLogin;
 import model.ModelMessage;
 import model.ModelUser;
 import net.miginfocom.swing.MigLayout;
@@ -52,7 +53,13 @@ public class main extends javax.swing.JFrame {
                 register();
             }
         };
-        LoginAndRegister = new PanelLoginAndRegister(eventRegister);
+        ActionListener eventLogin = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                login();
+            }
+        };
+        LoginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin);
         TimingTarget target = new TimingTargetAdapter(){
             @Override
             public void timingEvent(float fraction) {
@@ -120,8 +127,9 @@ public class main extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent ae) {
                 try {
                     ModelUser user = LoginAndRegister.getUser();
-                    if(service.verifyCodeWithUser(user.getUserName(), verifyCode.getInputCode())){
+                    if(service.verifyCodeWithUser(user.getUserID(), verifyCode.getInputCode())){
                         service.doneVerify(user.getUserName());
+                        service.deleteUsers(user.getEmail());
                         showMessage(Message.MessageType.SUCCESS, "Register success");
                         verifyCode.setVisible(false);
                     }else{
@@ -151,6 +159,21 @@ public class main extends javax.swing.JFrame {
             e.printStackTrace();
         }
         
+    }
+    
+    private void login(){
+        ModelLogin data = LoginAndRegister.getDataLogin();
+        try {
+            ModelUser user = service.login(data);
+            if(user != null){
+                this.dispose();
+                MainSystem.main(user);
+            }else{
+                 showMessage(Message.MessageType.ERROR, "Email or Password incorrect");
+            }
+        } catch (SQLException e) {
+            showMessage(Message.MessageType.ERROR, "Error Login");
+        }
     }
     
     private void sendMain(ModelUser user){

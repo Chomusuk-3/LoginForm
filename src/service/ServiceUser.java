@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Random;
 import java.util.UUID;
+import model.ModelLogin;
 
 public class ServiceUser {
 
@@ -19,20 +20,16 @@ public class ServiceUser {
     }
 
     public void insertUser(ModelUser user) throws SQLException {
-        PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE) values (SYS_GUID(),?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+        PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE) values (?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
         String code = generateVerifyCode();
         UUID uuid = UUID.randomUUID();
-        p.setString(1, user.getUserName());
-        p.setString(2, user.getEmail());
-        p.setString(3, user.getPassword());
-        p.setString(4, code);
+        p.setString(1, uuid.toString());
+        p.setString(2, user.getUserName());
+        p.setString(3, user.getEmail());
+        p.setString(4, user.getPassword());
+        p.setString(5, code);
         p.execute();
-       /* ResultSet r = p.getGeneratedKeys();
-        r.first();
-        int userID = r.getInt(1);
-        r.close();*/
         p.close();
-        user.setUserID(uuid);
         user.setVerifyCode(code);
     }
 
@@ -93,9 +90,18 @@ public class ServiceUser {
         p.close();
     }
 
-    public boolean verifyCodeWithUser(String userName, String code) throws SQLException {
+    public void deleteUsers(String Email) throws SQLException{
+        PreparedStatement p = con.prepareStatement("Delete from USERS where EMAIL=? AND STATUS is null");
+        p.setString(1,Email);
+        System.out.println(p);
+        p.execute();
+        p.close();
+    }
+    
+    public boolean verifyCodeWithUser(String userID, String code) throws SQLException {
             boolean verify = false;
-            ResultSet rs = con.createStatement().executeQuery(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s' FETCH FIRST 1 ROW ONLY",userName,code));
+ //         System.out.println(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s' FETCH FIRST 1 ROW ONLY",userID,code));
+            ResultSet rs = con.createStatement().executeQuery(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s' FETCH FIRST 1 ROW ONLY",userID,code));
                if(rs.next()){
                 verify = true;
             }
@@ -111,5 +117,18 @@ public class ServiceUser {
 //        p.close();
         rs.close();
         return verify;
+    }
+    
+    public ModelUser login(ModelLogin login) throws SQLException{
+        ModelUser data = null;
+        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID, USERNAME, EMAIL from USERS where EMAIL='%s' and PASSWORD='%s' AND STATUS='Verified' FETCH FIRST 1 ROW ONLY", login.getEmail(),login.getPassword()));
+        if(rs.next()){
+            String userID = rs.getString(1);
+            String userName = rs.getString(2);
+            String Email = rs.getString(3);
+            data = new ModelUser(userID, userName, Email, "");
+        }
+        rs.close();
+        return data;
     }
 }

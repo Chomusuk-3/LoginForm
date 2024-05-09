@@ -6,12 +6,12 @@ import java.util.UUID;
 
 public class ModelUser {
 
-    public UUID getUserID() {
+    public String getUserID() {
         return userID;
     }
 
    
-    public void setUserID(UUID userID) {
+    public void setUserID(String userID) {
         this.userID = userID;
     }
 
@@ -51,21 +51,21 @@ public class ModelUser {
     public ModelUser() {
     }
 
-    public ModelUser(UUID userID, String userName, String email, String password, String verifyCode) {
+    public ModelUser(String userID, String userName, String email, String password, String verifyCode) {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.verifyCode = verifyCode;
     }
-    public ModelUser(UUID userID, String userName, String email, String password) {
+    public ModelUser(String userID, String userName, String email, String password) {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
         this.password = password;
     }
     
-    private UUID userID;
+    private String userID;
     private String userName;
     private String email;
     private String password;
