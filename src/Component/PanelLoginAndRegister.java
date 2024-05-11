@@ -23,6 +23,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
 
+
     public ModelLogin getDataLogin() {
         return dataLogin;
     }
@@ -33,10 +34,11 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private ModelUser user;
     private ModelLogin dataLogin;
     
-    public PanelLoginAndRegister(ActionListener eventRegister, ActionListener eventLogin){
+    public PanelLoginAndRegister(ActionListener eventRegister, ActionListener eventLogin, ActionListener eventForget){
         initComponents();
         initRegister(eventRegister);
         initLogin(eventLogin);
+        initForget(eventForget);
         login.setVisible(false);
         register.setVisible(true);
     }
@@ -71,16 +73,15 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         cmd.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String userID = txtUser.getText().trim();
                 String userName = txtUser.getText().trim();
                 String email = txtEmail.getText().trim();
                 String password = String.valueOf(txtPassword.getPassword());
-                user = new ModelUser(userID,userName,email,password);
+                user = new ModelUser(userName,email,password);
             }
         });
     }
     private void initLogin(ActionListener eventLogin){
-        login.setLayout(new MigLayout("wrap","push[center]push","push[]25[]10[]10[]25[]push"));
+        login.setLayout(new MigLayout("wrap","push[center]push","push[]25[]10[]25[]10[]10[]push"));
         JLabel label = new JLabel("Sign In");
         label.setFont(new Font("sansserif", 1, 30));
         label.setForeground(new Color(21, 244, 250));
@@ -96,12 +97,12 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtPassword.setHint("Password");
         login.add(txtPassword, "w 60%");
         //nut quen mat khau
-        JButton cmdForget = new JButton("Forgot your password ?");
-        cmdForget.setForeground(new Color(100,100,100));
-        cmdForget.setFont(new Font("sansserif", 1, 12));
-        cmdForget.setContentAreaFilled(false);
-        cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        login.add(cmdForget);
+//        JButton cmdForget = new JButton("Forgot your password ?");
+//        cmdForget.setForeground(new Color(100,100,100));
+//        cmdForget.setFont(new Font("sansserif", 1, 12));
+//        cmdForget.setContentAreaFilled(false);
+//        cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
+//        login.add(cmdForget);
         //nut dang ki
         Button cmd = new Button();
         cmd.setBackground(new Color(21, 244, 250));
@@ -117,6 +118,16 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                dataLogin = new ModelLogin(email,password);
            }
        });
+    }
+    public void initForget(ActionListener eventForget){
+        //nut quen mat khau
+        JButton cmdForget = new JButton("Forgot your password ?");
+        cmdForget.setForeground(new Color(100,100,100));
+        cmdForget.setFont(new Font("sansserif", 1, 12));
+        cmdForget.setContentAreaFilled(false);
+        login.add(cmdForget);
+        cmdForget.addActionListener(eventForget);
+        
     }
     public void showRegister(boolean show){
         if(show){

@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 import java.util.Random;
 import java.util.UUID;
 import model.ModelLogin;
@@ -93,15 +94,14 @@ public class ServiceUser {
     public void deleteUsers(String Email) throws SQLException{
         PreparedStatement p = con.prepareStatement("Delete from USERS where EMAIL=? AND STATUS is null");
         p.setString(1,Email);
-        System.out.println(p);
         p.execute();
         p.close();
     }
     
-    public boolean verifyCodeWithUser(String userID, String code) throws SQLException {
+    public boolean verifyCodeWithUser(String userName, String code) throws SQLException {
             boolean verify = false;
- //         System.out.println(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s' FETCH FIRST 1 ROW ONLY",userID,code));
-            ResultSet rs = con.createStatement().executeQuery(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s' FETCH FIRST 1 ROW ONLY",userID,code));
+            System.out.println(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s' FETCH FIRST 1 ROW ONLY",userName,code));
+            ResultSet rs = con.createStatement().executeQuery(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s'",userName,code));
                if(rs.next()){
                 verify = true;
             }
@@ -130,5 +130,39 @@ public class ServiceUser {
         }
         rs.close();
         return data;
+    }
+    
+    public boolean checkEmail(String email)throws SQLException{
+        boolean check = false;
+        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID from USERS where EMAIL='%s' and STATUS='Verified' FETCH FIRST 1 ROW ONLY",email));
+        if(rs.next()){
+            check = true;
+        }
+        return check;
+    }
+    
+    public void updateForget(String email, String newpass)throws SQLException{
+        String code = generateVerifyCode();
+        System.out.println(code + email + newpass);
+//        try (PreparedStatement p = con.prepareStatement("update USERS set VERIFYCODE=? where EMAIL=?")) {
+//            p.setString(1, code);
+//            p.setString(2, email);
+//            p.execute();
+        con.createStatement().execute(String.format("update USERS set VERIFYCODE='%s', PASSWORD='%s' where EMAIL='%s'",code,newpass,email));   
+    }
+    
+    public ModelUser setUser(String email) throws SQLException{
+        ModelUser user = null;
+        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID, USERNAME, EMAIL, PASSWORD, VERIFYCODE from USERS where EMAIL='%s'",email));
+        if(rs.next()){
+            String userID = rs.getString(1);
+            String userName = rs.getString(2);
+            String userEmail = rs.getString(3);
+            String userPass = rs.getString(4);
+            String userCode = rs.getString(5);
+            user = new ModelUser(userID, userName, userEmail, userPass, userCode);
+        }
+        rs.close();
+        return user;
     }
 }

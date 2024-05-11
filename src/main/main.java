@@ -3,14 +3,18 @@ package main;
 
 import Component.Message;
 import Component.PanelCover;
+import Component.PanelForgetPassword;
 import Component.PanelLoading;
 import Component.PanelLoginAndRegister;
 import Component.PanelVerifyCode;
+import Component.PanelVerifyCode2;
 import connection.DatabaseConnect;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JLayeredPane;
 import model.ModelLogin;
 import model.ModelMessage;
@@ -29,6 +33,8 @@ public class main extends javax.swing.JFrame {
     private PanelCover cover;
     private PanelLoading loading;
     private PanelVerifyCode verifyCode;
+    private PanelVerifyCode2 verifyCode2;
+    private PanelForgetPassword forget;
     private boolean isLogin;
     private PanelLoginAndRegister LoginAndRegister;
     private final double addSize = 30;
@@ -47,6 +53,8 @@ public class main extends javax.swing.JFrame {
         cover = new PanelCover();
         loading = new PanelLoading();
         verifyCode = new PanelVerifyCode();
+        verifyCode2 = new PanelVerifyCode2();
+        forget = new PanelForgetPassword();
         ActionListener eventRegister = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -59,7 +67,13 @@ public class main extends javax.swing.JFrame {
                 login();
             }
         };
-        LoginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin);
+        ActionListener eventForget = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                forget();
+            }
+        };
+        LoginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin, eventForget);
         TimingTarget target = new TimingTargetAdapter(){
             @Override
             public void timingEvent(float fraction) {
@@ -110,8 +124,12 @@ public class main extends javax.swing.JFrame {
         bg.setLayout(layout);
         bg.setLayer(loading, JLayeredPane.POPUP_LAYER);
         bg.setLayer(verifyCode, JLayeredPane.POPUP_LAYER);
+        bg.setLayer(forget, JLayeredPane.POPUP_LAYER);
+        bg.setLayer(verifyCode2, JLayeredPane.POPUP_LAYER);
         bg.add(loading, "pos 0 0 100% 100%");
         bg.add(verifyCode, "pos 0 0 100% 100%");
+        bg.add(verifyCode2, "pos 0 0 100% 100%");
+        bg.add(forget, "pos 0 0 100% 100%");
         bg.add(cover,"Width "+ coverSize + "%, pos 0al 0 n 100%");
         bg.add(LoginAndRegister,"Width "+loginSize+"%, pos 1al 0 n 100%");//lal as 100%
         cover.addEvent(new ActionListener() {
@@ -122,12 +140,53 @@ public class main extends javax.swing.JFrame {
                 }
             }
         });
+        verifyCode2.addEventButtonOK2(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                ModelUser user =service.setUser(forget.getEmailCode());
+                System.out.println(verifyCode2.getInputCode2()+ user.getVerifyCode());
+                if(service.verifyCodeWithUser(user.getUserName(), verifyCode2.getInputCode2())){
+                        service.doneVerify(user.getUserName());
+                        showMessage(Message.MessageType.SUCCESS, "Change password success");
+                        verifyCode2.setVisible(false);
+                    }else{
+                        showMessage(Message.MessageType.ERROR, "Verify code incorrect");
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    showMessage(Message.MessageType.ERROR, "Error");
+                }
+            }
+        });
+        forget.addEventButtonOKForget(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    ModelUser user = new ModelUser();
+                    if(service.checkEmail(forget.getEmailCode())){
+                        service.updateForget(forget.getEmailCode(), forget.getNewPass());
+                        user = service.setUser(forget.getEmailCode());
+                        forget.setVisible(false);
+                        sendMain2(user);
+                        System.out.println(user.getVerifyCode());
+                    }
+                    else{
+                        showMessage(Message.MessageType.ERROR, "Email don't exist");
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    showMessage(Message.MessageType.ERROR, "Error");
+                }
+            }
+        });
         verifyCode.addEventButtonOK(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 try {
                     ModelUser user = LoginAndRegister.getUser();
-                    if(service.verifyCodeWithUser(user.getUserID(), verifyCode.getInputCode())){
+                     System.out.println(user.getUserID());
+                    if(service.verifyCodeWithUser(user.getUserName(), verifyCode.getInputCode())){
                         service.doneVerify(user.getUserName());
                         service.deleteUsers(user.getEmail());
                         showMessage(Message.MessageType.SUCCESS, "Register success");
@@ -143,6 +202,7 @@ public class main extends javax.swing.JFrame {
         });
     }
     
+    
     private void register(){
         ModelUser user = LoginAndRegister.getUser();
         try {
@@ -155,11 +215,13 @@ public class main extends javax.swing.JFrame {
                 sendMain(user);
             }
         } catch (SQLException e) {
+            
             showMessage(Message.MessageType.ERROR, "Error Register");
-            e.printStackTrace();
         }
         
     }
+    
+    
     
     private void login(){
         ModelLogin data = LoginAndRegister.getDataLogin();
@@ -176,6 +238,10 @@ public class main extends javax.swing.JFrame {
         }
     }
     
+    private void forget(){
+        forget.setVisible(true);
+    }
+    
     private void sendMain(ModelUser user){
         new Thread(new Runnable() {
             @Override
@@ -185,6 +251,23 @@ public class main extends javax.swing.JFrame {
                if(ms.isSuccess()){
                    loading.setVisible(false);
                    verifyCode.setVisible(true);
+               }else{
+                   loading.setVisible(false);
+                   showMessage(Message.MessageType.ERROR, ms.getMessage());
+               }
+            }
+        }).start();
+    }
+    
+    private void sendMain2(ModelUser user){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+               loading.setVisible(true);
+               ModelMessage ms = new ServiceMail().sendMain(user.getEmail(), user.getVerifyCode());
+               if(ms.isSuccess()){
+                   loading.setVisible(false);
+                   verifyCode2.setVisible(true);
                }else{
                    loading.setVisible(false);
                    showMessage(Message.MessageType.ERROR, ms.getMessage());

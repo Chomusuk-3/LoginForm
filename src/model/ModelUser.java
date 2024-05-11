@@ -58,6 +58,11 @@ public class ModelUser {
         this.password = password;
         this.verifyCode = verifyCode;
     }
+    public ModelUser( String userName, String email, String password) {
+        this.userName = userName;
+        this.email = email;
+        this.password = password;
+    }
     public ModelUser(String userID, String userName, String email, String password) {
         this.userID = userID;
         this.userName = userName;
