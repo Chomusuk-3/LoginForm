@@ -8,8 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Random;
 import java.util.UUID;
+import javax.management.Query;
 import model.ModelLogin;
 
 public class ServiceUser {
@@ -21,16 +23,17 @@ public class ServiceUser {
     }
 
     public void insertUser(ModelUser user) throws SQLException {
-        PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE) values (?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
-        String code = generateVerifyCode();
-        UUID uuid = UUID.randomUUID();
-        p.setString(1, uuid.toString());
-        p.setString(2, user.getUserName());
-        p.setString(3, user.getEmail());
-        p.setString(4, user.getPassword());
-        p.setString(5, code);
-        p.execute();
-        p.close();
+        String code;
+        try (PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE) values (?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+            code = generateVerifyCode();
+            UUID uuid = UUID.randomUUID();
+            p.setString(1, uuid.toString());
+            p.setString(2, user.getUserName());
+            p.setString(3, user.getEmail());
+            p.setString(4, user.getPassword());
+            p.setString(5, code);
+            p.execute();
+        }
         user.setVerifyCode(code);
     }
 
@@ -100,7 +103,7 @@ public class ServiceUser {
     
     public boolean verifyCodeWithUser(String userName, String code) throws SQLException {
             boolean verify = false;
-            System.out.println(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s' FETCH FIRST 1 ROW ONLY",userName,code));
+           
             ResultSet rs = con.createStatement().executeQuery(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s'",userName,code));
                if(rs.next()){
                 verify = true;
@@ -121,15 +124,22 @@ public class ServiceUser {
     
     public ModelUser login(ModelLogin login) throws SQLException{
         ModelUser data = null;
-        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID, USERNAME, EMAIL from USERS where EMAIL='%s' and PASSWORD='%s' AND STATUS='Verified' FETCH FIRST 1 ROW ONLY", login.getEmail(),login.getPassword()));
+        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID, USERNAME, EMAIL, FIRSTNAME, LASTNAME, DATEOFBIRTH, PHONE, BALANCE from USERS where EMAIL='%s' and PASSWORD='%s' AND STATUS='Verified' FETCH FIRST 1 ROW ONLY", login.getEmail(),login.getPassword()));
         if(rs.next()){
             String userID = rs.getString(1);
             String userName = rs.getString(2);
             String Email = rs.getString(3);
-            data = new ModelUser(userID, userName, Email, "");
+            String First = rs.getString(4);
+            String Last = rs.getString(5);
+            Date Dob = rs.getDate(6);
+            String Phone = rs.getString(7);
+            Double Balance = rs.getDouble(8);
+            data = new ModelUser(userID, userName, Email, "", First, Last, Dob, Phone, Balance);
         }
         rs.close();
         return data;
+        
+    
     }
     
     public boolean checkEmail(String email)throws SQLException{
@@ -143,11 +153,7 @@ public class ServiceUser {
     
     public void updateForget(String email, String newpass)throws SQLException{
         String code = generateVerifyCode();
-        System.out.println(code + email + newpass);
-//        try (PreparedStatement p = con.prepareStatement("update USERS set VERIFYCODE=? where EMAIL=?")) {
-//            p.setString(1, code);
-//            p.setString(2, email);
-//            p.execute();
+        //System.out.println(code + email + newpass);
         con.createStatement().execute(String.format("update USERS set VERIFYCODE='%s', PASSWORD='%s' where EMAIL='%s'",code,newpass,email));   
     }
     
@@ -165,4 +171,34 @@ public class ServiceUser {
         rs.close();
         return user;
     }
+    
+    public ModelUser setUserData(String Username) throws SQLException{
+        ModelUser user = new ModelUser();
+        PreparedStatement p = con.prepareStatement("select USERNAME, FIRSTNAME, LASTNAME, DATEOFBIRTH, PHONE, BALANCE from USERS where USERNAME=?");
+        p.setString(1, Username);
+        //ResultSet rs = con.createStatement().executeQuery(String.format("select USERNAME, FIRSTNAME, LASTNAME, DATEOFBIRTH, PHONE, BALANCE from USERS where USERNAME='%s'",Username));
+        ResultSet rs = p.executeQuery();
+            while(rs.next()){
+                
+                String userName = rs.getString("USERNAME");
+                String userFirst = rs.getString(2);
+                String userLast = rs.getString(3);
+                Date userDob = rs.getDate(4);
+                String userPhone = rs.getString(5);
+                Double userBalance = rs.getDouble(6);
+                System.out.println(rs.getString(1) + userFirst + rs.getString(4)+rs.getString(5)+rs.getString(6) );
+                user = new ModelUser(userName,userFirst, userLast, userDob, userPhone, userBalance);
+            }
+        p.close();
+        rs.close();
+        return user;
+    }
+    
+    public void updateEdit(String Firstname, String Lastname, String Dob, String Phone, String Username)throws SQLException{
+        System.out.println(String.format("update USERS set FirstName='%s', LastName='%s', DateOfBirth='%s', Phone='%s' where USERNAME='%s'",Firstname,Lastname,Dob,Phone,Username));
+        con.createStatement().execute(String.format("update USERS set FirstName='%s', LastName='%s', DateOfBirth='%s', Phone='%s' where USERNAME='%s'",Firstname,Lastname,Dob,Phone,Username)); 
+        System.out.println(String.format("update USERS set FirstName='%s', LastName='%s', DateOfBirth='%s', Phone='%s' where USERNAME='%s'",Firstname,Lastname,Dob,Phone,Username));
+        
+    }
+    
 }

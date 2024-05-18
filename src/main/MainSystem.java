@@ -7,13 +7,13 @@ import model.ModelUser;
 
 public class MainSystem extends javax.swing.JFrame {
 
-    private final ModelUser user;
-    public MainSystem(ModelUser user) {
-        this.user = user;
-        initComponents();
-        getContentPane().setBackground(new Color(255,255,255));
-        lbUser.setText(user.getUserName());
-    }
+//    private final ModelUser user;
+//    public MainSystem(ModelUser user) {
+//        this.user = user;
+//        initComponents();
+//        getContentPane().setBackground(new Color(255,255,255));
+//        lbUser.setText(user.getUserName());
+//    }
 
   
     @SuppressWarnings("unchecked")
@@ -49,13 +49,13 @@ public class MainSystem extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    public static void main(ModelUser user) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new MainSystem(user).setVisible(true);
-            }
-        });
-    }
+//    public static void main(ModelUser user) {
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new MainSystem(user).setVisible(true);
+//            }
+//        });
+//    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lbUser;
     // End of variables declaration//GEN-END:variables

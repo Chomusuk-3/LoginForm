@@ -145,7 +145,6 @@ public class main extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                 ModelUser user =service.setUser(forget.getEmailCode());
-                System.out.println(verifyCode2.getInputCode2()+ user.getVerifyCode());
                 if(service.verifyCodeWithUser(user.getUserName(), verifyCode2.getInputCode2())){
                         service.doneVerify(user.getUserName());
                         showMessage(Message.MessageType.SUCCESS, "Change password success");
@@ -169,7 +168,6 @@ public class main extends javax.swing.JFrame {
                         user = service.setUser(forget.getEmailCode());
                         forget.setVisible(false);
                         sendMain2(user);
-                        System.out.println(user.getVerifyCode());
                     }
                     else{
                         showMessage(Message.MessageType.ERROR, "Email don't exist");
@@ -185,7 +183,7 @@ public class main extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent ae) {
                 try {
                     ModelUser user = LoginAndRegister.getUser();
-                     System.out.println(user.getUserID());
+                   
                     if(service.verifyCodeWithUser(user.getUserName(), verifyCode.getInputCode())){
                         service.doneVerify(user.getUserName());
                         service.deleteUsers(user.getEmail());
@@ -229,7 +227,7 @@ public class main extends javax.swing.JFrame {
             ModelUser user = service.login(data);
             if(user != null){
                 this.dispose();
-                MainSystem.main(user);
+                InterfaceDA.main(user);
             }else{
                  showMessage(Message.MessageType.ERROR, "Email or Password incorrect");
             }
