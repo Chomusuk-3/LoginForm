@@ -14,6 +14,9 @@ import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -30,37 +33,38 @@ public class Form_2 extends javax.swing.JPanel {
 
     Edit edit = new Edit();
     private ServiceUser service;
-    
-    public Form_2(ModelUser user) {
+    public Form_2(ModelUser user)  {
+        service = new ServiceUser();
         initComponents();
         PanelCus.setBackground(new Color(10,209,214));
         txtUsername.setText("Hi, " + user.getUserName()); 
-        
-    }
-  
-    private void init(ModelUser user) throws SQLException{
-        service = new ServiceUser();
-        ModelUser data = service.setUserData(user.getUserName());
+        txtBalance.setText("balance : " + user.getBalance() + "đ");
+        lbFirstname.setText(user.getFirstname());
+        lbLastname.setText(user.getLastname());
+        lbDob.setText(user.getDob().toString());
+        lbPhone.setText(user.getPhone());
         edit.addEventButtonSave(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    //service.updateTest(user.getUserName());
+                    System.out.println(edit.getDob());
                     service.updateEdit(edit.getFirstName(), edit.getLastName(), edit.getDob(), edit.getPhone(), user.getUserName());
-                    System.out.println("ngu");
                     edit.setVisible(false);
+                    lbFirstname.setText(edit.getFirstName());
+                    lbLastname.setText(edit.getLastName());
+                    lbDob.setText(edit.getDob());
+                    lbPhone.setText(edit.getPhone());
                 } catch (SQLException ex) {
+                    ex.printStackTrace();
+                } catch (ParseException ex) {
                     ex.printStackTrace();
                 }
             
             }
         });
-        txtBalance.setText("balance : " + data.getBalance() + "đ");
-        lbFirstname.setText(data.getFirstname());
-        lbLastname.setText(data.getLastname());
-        lbDob.setText(data.getDob().toString());
-        lbPhone.setText(data.getPhone());
     }
+  
+   
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -105,16 +109,12 @@ public class Form_2 extends javax.swing.JPanel {
         jLabel2.setText("Phone :");
 
         lbFirstname.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        lbFirstname.setText("Nguyễn");
 
         lbLastname.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        lbLastname.setText("Quang Khải");
 
         lbPhone.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        lbPhone.setText("0377660843");
 
         lbDob.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        lbDob.setText("12/07/2004");
 
         javax.swing.GroupLayout PanelProfileLayout = new javax.swing.GroupLayout(PanelProfile);
         PanelProfile.setLayout(PanelProfileLayout);
@@ -141,14 +141,14 @@ public class Form_2 extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(PanelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lbFirstname, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+                    .addComponent(lbFirstname, javax.swing.GroupLayout.DEFAULT_SIZE, 36, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addGroup(PanelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lbLastname, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
                 .addGroup(PanelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbDob, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addComponent(lbDob, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
                     .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15)
                 .addGroup(PanelProfileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -163,11 +163,9 @@ public class Form_2 extends javax.swing.JPanel {
 
         txtUsername.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         txtUsername.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtUsername.setText("Chomuske");
 
         txtBalance.setFont(new java.awt.Font("SansSerif", 0, 12)); // NOI18N
         txtBalance.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        txtBalance.setText("Balance : 0đ");
 
         javax.swing.GroupLayout PanelCusLayout = new javax.swing.GroupLayout(PanelCus);
         PanelCus.setLayout(PanelCusLayout);
@@ -193,8 +191,8 @@ public class Form_2 extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBalance)
-                .addContainerGap(19, Short.MAX_VALUE))
+                .addComponent(txtBalance, javax.swing.GroupLayout.DEFAULT_SIZE, 22, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         btbEdit.setBackground(new java.awt.Color(255, 255, 255));

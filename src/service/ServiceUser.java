@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Random;
@@ -17,7 +18,7 @@ import model.ModelLogin;
 public class ServiceUser {
 
     private final Connection con;
-
+    SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
     public ServiceUser() {
         con = DatabaseConnect.getInstance().getConnection();
     }
@@ -159,7 +160,7 @@ public class ServiceUser {
     
     public ModelUser setUser(String email) throws SQLException{
         ModelUser user = null;
-        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID, USERNAME, EMAIL, PASSWORD, VERIFYCODE from USERS where EMAIL='%s'",email));
+        ResultSet rs = con.createStatement().executeQuery(String.format("select  USERNAME, FIRSTNAME, EMAIL, PASSWORD, VERIFYCODE from USERS where EMAIL='%s'",email));
         if(rs.next()){
             String userID = rs.getString(1);
             String userName = rs.getString(2);
@@ -171,34 +172,12 @@ public class ServiceUser {
         rs.close();
         return user;
     }
-    
-    public ModelUser setUserData(String Username) throws SQLException{
-        ModelUser user = new ModelUser();
-        PreparedStatement p = con.prepareStatement("select USERNAME, FIRSTNAME, LASTNAME, DATEOFBIRTH, PHONE, BALANCE from USERS where USERNAME=?");
-        p.setString(1, Username);
-        //ResultSet rs = con.createStatement().executeQuery(String.format("select USERNAME, FIRSTNAME, LASTNAME, DATEOFBIRTH, PHONE, BALANCE from USERS where USERNAME='%s'",Username));
-        ResultSet rs = p.executeQuery();
-            while(rs.next()){
-                
-                String userName = rs.getString("USERNAME");
-                String userFirst = rs.getString(2);
-                String userLast = rs.getString(3);
-                Date userDob = rs.getDate(4);
-                String userPhone = rs.getString(5);
-                Double userBalance = rs.getDouble(6);
-                System.out.println(rs.getString(1) + userFirst + rs.getString(4)+rs.getString(5)+rs.getString(6) );
-                user = new ModelUser(userName,userFirst, userLast, userDob, userPhone, userBalance);
-            }
-        p.close();
-        rs.close();
-        return user;
-    }
+   
     
     public void updateEdit(String Firstname, String Lastname, String Dob, String Phone, String Username)throws SQLException{
-        System.out.println(String.format("update USERS set FirstName='%s', LastName='%s', DateOfBirth='%s', Phone='%s' where USERNAME='%s'",Firstname,Lastname,Dob,Phone,Username));
-        con.createStatement().execute(String.format("update USERS set FirstName='%s', LastName='%s', DateOfBirth='%s', Phone='%s' where USERNAME='%s'",Firstname,Lastname,Dob,Phone,Username)); 
-        System.out.println(String.format("update USERS set FirstName='%s', LastName='%s', DateOfBirth='%s', Phone='%s' where USERNAME='%s'",Firstname,Lastname,Dob,Phone,Username));
-        
+        con.setAutoCommit(false);
+        con.createStatement().executeQuery(String.format("update USERS set FirstName='%s', LastName='%s', DATEOFBIRTH = TO_DATE('%s','dd/MM/yyyy'), Phone='%s' where USERNAME='%s'",Firstname,Lastname,Dob,Phone,Username));
+        con.commit();
     }
     
 }

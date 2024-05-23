@@ -1,11 +1,14 @@
 
 package model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
 
+
 public class ModelUser {
+    SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
 
     public double getBalance() {
         return balance;
@@ -102,14 +105,9 @@ public class ModelUser {
         this.email = email;
         this.password = password;
     }
-    public ModelUser(String userID, String userName, String email, String password) {
-        this.userID = userID;
-        this.userName = userName;
-        this.email = email;
-        this.password = password;
-    }
+    
 
-    public ModelUser(String userID, String userName, String email, String password, String firstname, String lastname, Date dob, String Phone, double balance) {
+    public ModelUser(String userID, String userName, String email, String password, String firstname, String lastname,Date dob, String Phone, double balance) {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
@@ -120,15 +118,16 @@ public class ModelUser {
         this.Phone = Phone;
         this.balance = balance;
     }
-    public ModelUser(String username, String firstname, String lastname, Date dob, String Phone, double balance) {
-        this.userName = username;
+
+    public ModelUser(String firstname, String lastname, Date dob, String Phone) {
         this.firstname = firstname;
         this.lastname = lastname;
         this.dob = dob;
         this.Phone = Phone;
-        this.balance = balance;
     }
+    
 
+    
     private String userID;
     private String userName;
     private String email;

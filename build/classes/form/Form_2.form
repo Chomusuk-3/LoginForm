@@ -97,16 +97,16 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel4" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
-                      <Component id="lbFirstname" alignment="3" pref="34" max="32767" attributes="0"/>
+                      <Component id="lbFirstname" alignment="3" pref="36" max="32767" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="15" max="32767" attributes="0"/>
+                  <EmptySpace pref="18" max="32767" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="lbLastname" alignment="3" min="-2" pref="31" max="-2" attributes="0"/>
                       <Component id="jLabel6" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="lbDob" alignment="3" pref="32" max="32767" attributes="0"/>
+                      <Component id="lbDob" alignment="3" pref="34" max="32767" attributes="0"/>
                       <Component id="jLabel5" alignment="3" min="-2" pref="28" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
@@ -169,7 +169,6 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SansSerif" size="14" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Nguy&#x1ec5;n"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbLastname">
@@ -177,7 +176,6 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SansSerif" size="14" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Quang Kh&#x1ea3;i"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbPhone">
@@ -185,7 +183,6 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SansSerif" size="14" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="0377660843"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lbDob">
@@ -193,7 +190,6 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="SansSerif" size="14" style="0"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="12/07/2004"/>
           </Properties>
         </Component>
       </SubComponents>
@@ -229,8 +225,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="txtUsername" min="-2" pref="24" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="txtBalance" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="19" max="32767" attributes="0"/>
+                  <Component id="txtBalance" pref="22" max="32767" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -253,7 +249,6 @@
               <Font name="SansSerif" size="12" style="0"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Chomuske"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="txtBalance">
@@ -262,7 +257,6 @@
               <Font name="SansSerif" size="12" style="0"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Balance : 0&#x111;"/>
           </Properties>
         </Component>
       </SubComponents>

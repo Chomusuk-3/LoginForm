@@ -8,6 +8,8 @@ import event.EventMenuSelected;
 import form.Form_1;
 import form.Form_2;
 import form.Form_3;
+import form.Form_4;
+import form.Form_5;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -28,15 +30,6 @@ public class InterfaceDA extends javax.swing.JFrame {
     
     public InterfaceDA(ModelUser user)  {
         this.user = user;
-        service = new ServiceUser();
-        ModelUser data = new ModelUser();
-        try {
-          data = service.setUserData(user.getUserName());
-          System.out.println(data);
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        
         initComponents();
         getContentPane().setBackground(new Color(0,0,0,0));
         menu.initMoving(InterfaceDA.this);
@@ -49,6 +42,14 @@ public class InterfaceDA extends javax.swing.JFrame {
                         setForm(new Form_2(user));
                 }else if(index == 2){
                     setForm(new Form_3());
+                }else if(index ==3){
+                    setForm(new Form_4());
+                }else if(index == 4){
+                    try {
+                        setForm(new Form_5(user));
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
@@ -87,13 +88,13 @@ public class InterfaceDA extends javax.swing.JFrame {
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
                 .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addGap(0, 0, 0))
         );
         panelBorder1Layout.setVerticalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
