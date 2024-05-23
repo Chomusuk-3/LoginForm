@@ -10,6 +10,8 @@ import form.Form_2;
 import form.Form_3;
 import form.Form_4;
 import form.Form_5;
+import form.GameStore;
+import form.topup_form;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
@@ -37,7 +39,7 @@ public class InterfaceDA extends javax.swing.JFrame {
             @Override
             public void selected(int index) {
                 if(index == 0){
-                    setForm(new Form_1());
+                    setForm(new GameStore());
                 }else if(index == 1){
                         setForm(new Form_2(user));
                 }else if(index == 2){
@@ -51,9 +53,12 @@ public class InterfaceDA extends javax.swing.JFrame {
                         ex.printStackTrace();
                     }
                 }
+                else if(index == 5){
+                    setForm(new topup_form(user));
+                }
             }
         });
-        setForm(new Form_1()); // start system with form store
+        setForm(new GameStore()); // start system with form store
         
     }
     

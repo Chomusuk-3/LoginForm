@@ -89,6 +89,10 @@ public class ModelUser {
     public void setVerifyCode(String verifyCode) {
         this.verifyCode = verifyCode;
     }
+    
+     public void balanceEdit(long value) {
+        this.balance += value;
+    }
 
     public ModelUser() {
     }
