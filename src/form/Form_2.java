@@ -3,7 +3,6 @@ package form;
 
 import Component.Edit;
 import Component.Message;
-import Component.NewJPanel;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;

@@ -11,7 +11,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.JFrame;
+import model.ModelUser;
 import model.Model_Menu;
+import service.ServiceUser;
 
 
 public class Menu extends javax.swing.JPanel {
@@ -36,7 +38,7 @@ public class Menu extends javax.swing.JPanel {
         listMenu1.addItem(new Model_Menu("6", "Cart", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("3", "Purchased", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("4", "Top-up", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+        listMenu1.addItem(new Model_Menu("8", "Add Game", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
         listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
         listMenu1.addItem(new Model_Menu("5", "Logout", Model_Menu.MenuType.MENU));

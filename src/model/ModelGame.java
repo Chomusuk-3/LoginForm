@@ -23,7 +23,6 @@ public class ModelGame {
         this.download = download;
         this.size = size;
         this.price = price;
-        System.out.println(gameName);
     }
     public void setAgeLim(int ageLim) {
         this.ageLim = ageLim;

@@ -11,15 +11,14 @@ import javax.swing.table.DefaultTableModel;
 import model.ModelUser;
 
 
-public class Form_5 extends javax.swing.JPanel {
+public class Purchased extends javax.swing.JPanel {
     private final Connection con;
-    public Form_5(ModelUser user) throws SQLException {
+    public Purchased(ModelUser user) throws SQLException {
         con =  DatabaseConnect.getInstance().getConnection();
         initComponents();
         spTable.setVerticalScrollBar(new ScrollBar());
         ResultSet rs = con.createStatement().executeQuery(String.format("SELECT PAYMENTDETAIL.PAYMENTID,GAMENAME,TOTAL,DATECREATE FROM PAYMENTDETAIL INNER JOIN PAYMENT ON PAYMENTDETAIL.PAYMENTID = PAYMENT.PAYMENTID INNER JOIN GAMES ON PAYMENTDETAIL.GAMEID = GAMES.GAMEID WHERE USERID = '%s'", user.getUserID()));
         while(rs.next()){
-            System.out.println("ngu");
             String id = rs.getString(1);
             String game = rs.getString(2);
             String total = String.valueOf(rs.getDouble(3));

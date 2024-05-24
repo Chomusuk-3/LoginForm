@@ -5,11 +5,11 @@ package main;
 import Component.Edit;
 import connection.DatabaseConnect;
 import event.EventMenuSelected;
-import form.Form_1;
+import form.AddGame;
 import form.Form_2;
 import form.Form_3;
 import form.Form_4;
-import form.Form_5;
+import form.Purchased;
 import form.GameStore;
 import form.topup_form;
 import java.awt.Color;
@@ -48,13 +48,15 @@ public class InterfaceDA extends javax.swing.JFrame {
                     setForm(new Form_4());
                 }else if(index == 4){
                     try {
-                        setForm(new Form_5(user));
+                        setForm(new Purchased(user));
                     } catch (SQLException ex) {
                         ex.printStackTrace();
                     }
                 }
                 else if(index == 5){
                     setForm(new topup_form(user));
+                }else if(index == 6 && user.getEmail().equals("admin@gmail.com")){
+                    setForm(new AddGame());
                 }
             }
         });
