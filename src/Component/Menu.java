@@ -13,11 +13,12 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.JFrame;
 import model.ModelUser;
 import model.Model_Menu;
+import oracle.jdbc.driver.OracleDriver;
 import service.ServiceUser;
 
 
 public class Menu extends javax.swing.JPanel {
-
+    private ModelUser user;
     private EventMenuSelected event;
     public void addEventMenuSelected(EventMenuSelected event){
         this.event = event;
@@ -27,18 +28,25 @@ public class Menu extends javax.swing.JPanel {
     public Menu() {
         initComponents();
         setOpaque(false);
+        
         listMenu1.setOpaque(false);
-        init();
+        if(user!=null){
+            init();
+        }    
     }
-
-     private void init(){
+    public void menuSetuser(ModelUser user){
+        this.user = user;
+    }
+     public void init(){
         listMenu1.addItem(new Model_Menu("1", "Store", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("7", "User", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("2", "Game Library", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("6", "Cart", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("3", "Purchased", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("4", "Top-up", Model_Menu.MenuType.MENU));
-        listMenu1.addItem(new Model_Menu("8", "Add Game", Model_Menu.MenuType.MENU));
+        if(user.getEmail().equals("admin@gmail.com")){
+            listMenu1.addItem(new Model_Menu("8", "Add Game", Model_Menu.MenuType.MENU));
+        }
         listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
         listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
         listMenu1.addItem(new Model_Menu("5", "Logout", Model_Menu.MenuType.MENU));

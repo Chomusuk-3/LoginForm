@@ -17,12 +17,12 @@ public class gameService {
         con = DatabaseConnect.getInstance().getConnection();
     }
     public ModelGame getGameDetail(String gameId) throws SQLException{
-        ResultSet rs = con.createStatement().executeQuery("SELECT GameID, GameName,developerid,rating,releaseday,agelimit,downloaded,Description,gamesize,price FROM GAMES where gameid = '"+ gameId +"'");
+        ResultSet rs = con.createStatement().executeQuery("SELECT GameID, GameName,developername,rating,releaseday,agelimit,downloaded,Description,gamesize,price FROM GAMES where gameid = '"+ gameId +"'");
         while (rs.next()) {
             String gameID = rs.getString("GameID");
             String gameName = rs.getString("GameName");
             String description = rs.getString("Description");
-            String developerid = rs.getString("developerid");
+            String developerid = rs.getString("developername");
             Double rating = rs.getDouble("rating");
             Date reday = rs.getDate("releaseday");
             int agelimit = rs.getInt("agelimit");

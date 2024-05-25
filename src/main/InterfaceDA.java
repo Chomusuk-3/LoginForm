@@ -2,10 +2,12 @@
 package main;
 
 
+import Component.AddGame;
 import Component.Edit;
+import Component.Menu;
 import connection.DatabaseConnect;
 import event.EventMenuSelected;
-import form.AddGame;
+import form.CartForm;
 import form.Form_2;
 import form.Form_3;
 import form.Form_4;
@@ -20,32 +22,36 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
+import model.ModelCart;
 import model.ModelUser;
 import service.ServiceUser;
 
 
 public class InterfaceDA extends javax.swing.JFrame {
-
+    private ModelCart Cart;
     private ModelUser user;
     private Edit edit;
     private ServiceUser service;
     
-    public InterfaceDA(ModelUser user)  {
+    public InterfaceDA(ModelUser user,ModelCart Cart)  {
         this.user = user;
+        this.Cart = Cart;
         initComponents();
         getContentPane().setBackground(new Color(0,0,0,0));
-        menu.initMoving(InterfaceDA.this);
+        menu.menuSetuser(user);
+        menu.init();
+        menu.initMoving(InterfaceDA.this);     
         menu.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
                 if(index == 0){
-                    setForm(new GameStore());
+                    setForm(new GameStore(Cart));
                 }else if(index == 1){
                         setForm(new Form_2(user));
                 }else if(index == 2){
                     setForm(new Form_3());
                 }else if(index ==3){
-                    setForm(new Form_4());
+                    setForm(new CartForm(Cart));
                 }else if(index == 4){
                     try {
                         setForm(new Purchased(user));
@@ -60,7 +66,7 @@ public class InterfaceDA extends javax.swing.JFrame {
                 }
             }
         });
-        setForm(new GameStore()); // start system with form store
+        setForm(new GameStore(Cart)); // start system with form store
         
     }
     
@@ -123,7 +129,7 @@ public class InterfaceDA extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(ModelUser user) {
+    public static void main(ModelUser user,ModelCart Cart) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -155,7 +161,7 @@ public class InterfaceDA extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new InterfaceDA(user).setVisible(true);
+                new InterfaceDA(user,Cart).setVisible(true);
             }
         });
     }

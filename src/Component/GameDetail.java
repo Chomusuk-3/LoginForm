@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import model.ModelGame;
+import model.ModelCart;
 
 /**
  *
@@ -19,11 +20,17 @@ import model.ModelGame;
  */
 public class GameDetail extends javax.swing.JFrame {
     private ModelGame game = null;
-    /**
-     * Creates new form GameDetail
-     */
-    public GameDetail(ModelGame game) {
+    private ModelCart Cart = new ModelCart();
+ 
+    public GameDetail(ModelGame game,ModelCart Cart) {
+        try {
+            // Thiết lập Look and Feel theo hệ điều hành đang sử dụng
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.game = game;
+        this.Cart = Cart;
         setTitle("Game Details");
         setSize(300, 200);
         setLocationRelativeTo(null);
@@ -93,7 +100,6 @@ public class GameDetail extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         description = new javax.swing.JTextArea();
         jButton2 = new javax.swing.JButton();
-        buttonOutLine1 = new Swing.ButtonOutLine();
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -380,6 +386,11 @@ public class GameDetail extends javax.swing.JFrame {
         jLabel5.setText("Mô tả");
 
         jButton1.setText("Thêm vào giỏ hàng");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         description.setEditable(false);
         description.setColumns(20);
@@ -389,15 +400,10 @@ public class GameDetail extends javax.swing.JFrame {
 
         jButton2.setText("Mua hàng");
 
-        buttonOutLine1.setBackground(new java.awt.Color(255, 0, 51));
-        buttonOutLine1.setForeground(new java.awt.Color(255, 51, 51));
-        buttonOutLine1.setText("bucac");
-
         jLayeredPane9.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane9.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane9.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane9.setLayer(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane9.setLayer(buttonOutLine1, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane9Layout = new javax.swing.GroupLayout(jLayeredPane9);
         jLayeredPane9.setLayout(jLayeredPane9Layout);
@@ -406,11 +412,9 @@ public class GameDetail extends javax.swing.JFrame {
             .addGroup(jLayeredPane9Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jLayeredPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 930, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane9Layout.createSequentialGroup()
-                        .addGap(0, 591, Short.MAX_VALUE)
-                        .addComponent(buttonOutLine1, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
@@ -429,8 +433,7 @@ public class GameDetail extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jLayeredPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2)
-                    .addComponent(buttonOutLine1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton2))
                 .addContainerGap())
         );
 
@@ -468,34 +471,20 @@ public class GameDetail extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_RatingActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Cart.addGame(game);
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GameDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GameDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GameDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GameDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            // Thiết lập Look and Feel theo hệ điều hành đang sử dụng
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        //</editor-fold>
-        
-        /* Create and display the form */
 //        try {
 //            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
 //                if ("Nimbus".equals(info.getName())) {
@@ -524,7 +513,6 @@ public class GameDetail extends javax.swing.JFrame {
     private javax.swing.JTextField Name;
     private javax.swing.JTextField Rating;
     private javax.swing.JTextField Reday;
-    private Swing.ButtonOutLine buttonOutLine1;
     private javax.swing.JTextArea description;
     private javax.swing.JTextField download;
     private javax.swing.JButton jButton1;

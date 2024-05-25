@@ -4,6 +4,7 @@
  */
 package form;
 
+import javax.swing.JScrollPane;
 import javax.swing.*;
 import Component.GameDetail;
 import connection.DatabaseConnect;
@@ -26,7 +27,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import model.ModelGame;
 import service.gameService;
-
+import model.ModelCart;
 /**
  *
  * @author khoa
@@ -34,11 +35,18 @@ import service.gameService;
 public class GameStore extends javax.swing.JPanel {
     private final Connection con;
     private DefaultTableModel model;
+    private ModelCart Cart = new ModelCart();
     private gameService service = new gameService();
     /**
      * Creates new form GameStore
      */
-    public GameStore() {
+    public GameStore(ModelCart Cart) {
+        try {
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
+        this.Cart = Cart;
         con = DatabaseConnect.getInstance().getConnection();
         initComponents(); // Gọi initComponents() trước để khởi tạo các thành phần giao diện
         initTableModel(); // Sau đó khởi tạo model cho bảng
@@ -56,7 +64,7 @@ public class GameStore extends javax.swing.JPanel {
                    
                     ModelGame game = service.getGameDetail(gameId);
                     // Xử lý hành động khi nhấn vào hàng
-                    GameDetail gameDetailFrame = new GameDetail(game);
+                    GameDetail gameDetailFrame = new GameDetail(game,Cart);
                     gameDetailFrame.setVisible(true);                   
                 } catch (SQLException ex) {
                     Logger.getLogger(GameStore.class.getName()).log(Level.SEVERE, null, ex);
@@ -73,10 +81,8 @@ public class GameStore extends javax.swing.JPanel {
         while (rs.next()) {
             String gameID = rs.getString(1);
             String gameName = rs.getString(2);
-            String description = rs.getString(3);
-            Double price = rs.getDouble(10);
-            System.out.println(description);
-            
+            String description = rs.getString(4);
+            Double price = rs.getDouble(11);
             model.addRow(new Object[]{gameID, gameName, description, price});
         }
     } catch (SQLException ex) {
@@ -89,7 +95,7 @@ public class GameStore extends javax.swing.JPanel {
         model = new DefaultTableModel(
             new Object [][] {},
             new String [] {
-                "No", "Name", "Description", "price","xem"
+                "No", "Name", "Description", "price"
             }
         );
         storeTable1.setModel(model);
@@ -112,6 +118,14 @@ public class GameStore extends javax.swing.JPanel {
 
         storeTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
                 {null, null, null, null},
@@ -155,8 +169,8 @@ public class GameStore extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 396, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(122, 122, 122))
         );
 
         add(jDesktopPane1);

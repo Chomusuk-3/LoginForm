@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JLayeredPane;
+import model.ModelCart;
 import model.ModelLogin;
 import model.ModelMessage;
 import model.ModelUser;
@@ -28,7 +29,7 @@ import service.ServiceUser;
 
 
 public class main extends javax.swing.JFrame {
-
+    private ModelCart Cart = new ModelCart();
     private MigLayout layout;
     private PanelCover cover;
     private PanelLoading loading;
@@ -227,7 +228,7 @@ public class main extends javax.swing.JFrame {
             ModelUser user = service.login(data);
             if(user != null){
                 this.dispose();
-                InterfaceDA.main(user);
+                InterfaceDA.main(user,Cart);
             }else{
                  showMessage(Message.MessageType.ERROR, "Email or Password incorrect");
             }
