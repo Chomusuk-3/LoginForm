@@ -13,6 +13,7 @@ import java.awt.event.MouseListener;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,31 +29,43 @@ import service.ServiceUser;
 
 
 
-public class Form_2 extends javax.swing.JPanel {
+public class UserForm extends javax.swing.JPanel {
 
     Edit edit = new Edit();
     private ServiceUser service;
-    public Form_2(ModelUser user)  {
+    public UserForm(ModelUser user)  {
+        String outputString;
         service = new ServiceUser();
         initComponents();
+        if(user.getDob() == null){
+            outputString = null;
+        }else{
+            SimpleDateFormat oupFormat = new SimpleDateFormat("dd/MM/yyyy");
+            outputString = oupFormat.format(user.getDob());
+        }
         PanelCus.setBackground(new Color(10,209,214));
         txtUsername.setText("Hi, " + user.getUserName()); 
         txtBalance.setText("balance : " + user.getBalance() + "đ");
         lbFirstname.setText(user.getFirstname());
         lbLastname.setText(user.getLastname());
-        lbDob.setText(user.getDob().toString());
+        lbDob.setText(outputString);
         lbPhone.setText(user.getPhone());
         edit.addEventButtonSave(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    System.out.println(edit.getDob());
                     service.updateEdit(edit.getFirstName(), edit.getLastName(), edit.getDob(), edit.getPhone(), user.getUserName());
                     edit.setVisible(false);
                     lbFirstname.setText(edit.getFirstName());
                     lbLastname.setText(edit.getLastName());
                     lbDob.setText(edit.getDob());
                     lbPhone.setText(edit.getPhone());
+                    DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+                    Date date = df.parse(edit.getDob());
+                    user.setFirstname(edit.getFirstName());
+                    user.setLastname(edit.getLastName());
+                    user.setDob(date);
+                    user.setPhone(edit.getPhone());
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 } catch (ParseException ex) {

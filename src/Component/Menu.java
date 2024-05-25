@@ -46,9 +46,19 @@ public class Menu extends javax.swing.JPanel {
         listMenu1.addItem(new Model_Menu("4", "Top-up", Model_Menu.MenuType.MENU));
         if(user.getEmail().equals("admin@gmail.com")){
             listMenu1.addItem(new Model_Menu("8", "Add Game", Model_Menu.MenuType.MENU));
+        }else{
+            listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
         }
-        listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
-        listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+        if(user.getEmail().equals("admin@gmail.com")){
+            listMenu1.addItem(new Model_Menu("8", "Add Code Game", Model_Menu.MenuType.MENU));
+        }else{
+            listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+        }
+        if(user.getEmail().equals("admin@gmail.com")){
+            listMenu1.addItem(new Model_Menu("8", "Add Coupon", Model_Menu.MenuType.MENU));
+        }else{
+            listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+        }
         listMenu1.addItem(new Model_Menu("5", "Logout", Model_Menu.MenuType.MENU));
     }
     @SuppressWarnings("unchecked")

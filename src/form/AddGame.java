@@ -1,5 +1,5 @@
 
-package Component;
+package form;
 
 import Swing.ScrollBar;
 import connection.DatabaseConnect;
@@ -396,7 +396,6 @@ public class AddGame extends javax.swing.JPanel {
         Double price = Double.valueOf(txtPrice.getText().trim());
         String SDes = txtSDes.getText().trim();
         String descrip = txtDes.getText().trim();
-        System.out.println("Component.AddGame.buttonOutLine1ActionPerformed()");
         con = DatabaseConnect.getInstance().getConnection();
         try {
             PreparedStatement p = con.prepareStatement("INSERT INTO GAMES(GAMEID, GAMENAME, DEVELOPERNAME, Description, SDescription, ReleaseDay, AgeLimit, GameSize, Price, image) VALUES (?,?,?,?,?,TO_DATE(?, 'dd/MM/yyyy'),?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
@@ -407,7 +406,6 @@ public class AddGame extends javax.swing.JPanel {
             p.setString(4, descrip);
             p.setString(5, SDes);
             p.setString(6, getRelease());
-            System.out.println(getRelease());
             p.setInt(7, age);
             p.setDouble(8, size);
             p.setDouble(9, price);

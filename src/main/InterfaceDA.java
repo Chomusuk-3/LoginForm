@@ -2,13 +2,15 @@
 package main;
 
 
-import Component.AddGame;
+import form.AddGame;
 import Component.Edit;
 import Component.Menu;
 import connection.DatabaseConnect;
 import event.EventMenuSelected;
+import form.AddCodeGame;
+import form.AddCoupon;
 import form.CartForm;
-import form.Form_2;
+import form.UserForm;
 import form.Form_3;
 import form.Form_4;
 import form.Purchased;
@@ -47,7 +49,7 @@ public class InterfaceDA extends javax.swing.JFrame {
                 if(index == 0){
                     setForm(new GameStore(Cart));
                 }else if(index == 1){
-                        setForm(new Form_2(user));
+                        setForm(new UserForm(user));
                 }else if(index == 2){
                     setForm(new Form_3());
                 }else if(index ==3){
@@ -63,6 +65,10 @@ public class InterfaceDA extends javax.swing.JFrame {
                     setForm(new topup_form(user));
                 }else if(index == 6 && user.getEmail().equals("admin@gmail.com")){
                     setForm(new AddGame());
+                }else if(index == 7 && user.getEmail().equals("admin@gmail.com")){
+                    setForm(new AddCodeGame());
+                }else if(index == 8 && user.getEmail().equals("admin@gmail.com")){
+                    setForm(new AddCoupon());
                 }
             }
         });
