@@ -3,14 +3,21 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Component;
+import connection.DatabaseConnect;
 import javax.swing.*;
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.table.DefaultTableModel;
 import model.ModelGame;
 import model.ModelCart;
 
@@ -19,10 +26,12 @@ import model.ModelCart;
  * @author khoa
  */
 public class GameDetail extends javax.swing.JFrame {
+    private final Connection con;
     private ModelGame game = null;
     private ModelCart Cart = new ModelCart();
- 
+    private DefaultTableModel model;
     public GameDetail(ModelGame game,ModelCart Cart) {
+        con = DatabaseConnect.getInstance().getConnection();
         try {
             // Thiết lập Look and Feel theo hệ điều hành đang sử dụng
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -33,22 +42,14 @@ public class GameDetail extends javax.swing.JFrame {
         this.Cart = Cart;
         setTitle("Game Details");
         setSize(300, 200);
-        setLocationRelativeTo(null);
-
-        // Tạo các thành phần giao diện
-//        nameLabel = new JLabel("Game: " + gameName);
-//        descriptionLabel = new JLabel("Description: " + description);
-//        priceLabel = new JLabel("Price: " + price);
-
-        // Đặt layout và thêm các thành phần vào JFrame
-//        setLayout(new GridLayout(3, 1));
-//        add(nameLabel);
-//        add(descriptionLabel);
-//        add(priceLabel);
+        setLocationRelativeTo(null);       
         initComponents();
+        initTableModel(); // Sau đó khởi tạo model cho bảng
+        addData();
         loadJFrame();
     }
     public void loadJFrame(){
+        setLocationRelativeTo(null);  
         Name.setText(game.getGameName());
         Dev.setText(game.getDeveloper());
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
@@ -58,6 +59,36 @@ public class GameDetail extends javax.swing.JFrame {
         size.setText(String.valueOf(game.getSize()));
         Rating.setText(String.valueOf(game.getRating()));
         description.setText(game.getDescription());
+    }
+    
+    private void initTableModel() {
+        model = new DefaultTableModel(
+            new Object [][] {},
+            new String [] {
+                "No", "User","Comment","Rating"
+            }
+        );
+        table1.setModel(model);
+    }
+    private void addData() {
+        try {
+            model = (DefaultTableModel) table1.getModel();
+            model.setRowCount(0);
+            String gameID = game.getGameId();
+            int rowNum = 1;
+            ResultSet rs = con.createStatement().executeQuery("SELECT * FROM gamereview where gameid = '"+ gameID +"' ");
+            while (rs.next()) {
+                String userID = rs.getString(2);
+                String gameName = rs.getString(4);
+                String description = rs.getString(5);
+//                Double price = rs.getDouble(11);
+                model.addRow(new Object[]{1,userID,gameName, description});
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(GameDetail.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -95,11 +126,16 @@ public class GameDetail extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         jLayeredPane9 = new javax.swing.JLayeredPane();
-        jLabel5 = new javax.swing.JLabel();
+        jDesktopPane1 = new javax.swing.JDesktopPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        table1 = new Swing.Table();
+        jLabel2 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
+        jDesktopPane2 = new javax.swing.JDesktopPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         description = new javax.swing.JTextArea();
-        jButton2 = new javax.swing.JButton();
+        jLabel5 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -109,16 +145,21 @@ public class GameDetail extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        jPanel8.setBackground(java.awt.Color.white);
+
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel4.setText("Game Name");
         jPanel8.add(jLabel4);
 
         jPanel1.add(jPanel8, java.awt.BorderLayout.PAGE_START);
 
+        jPanel7.setBackground(java.awt.Color.white);
+
         jPanel2.setBackground(java.awt.Color.white);
         jPanel2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         Dev.setEditable(false);
+        Dev.setBackground(java.awt.Color.white);
         Dev.setText("jTextField1");
         Dev.setBorder(null);
         Dev.setFocusable(false);
@@ -155,6 +196,7 @@ public class GameDetail extends javax.swing.JFrame {
         );
 
         Name.setEditable(false);
+        Name.setBackground(java.awt.Color.white);
         Name.setText("Elden Ring");
         Name.setBorder(null);
         Name.setFocusable(false);
@@ -191,6 +233,7 @@ public class GameDetail extends javax.swing.JFrame {
         );
 
         Reday.setEditable(false);
+        Reday.setBackground(java.awt.Color.white);
         Reday.setText("jTextField1");
         Reday.setBorder(null);
         Reday.setFocusable(false);
@@ -252,6 +295,7 @@ public class GameDetail extends javax.swing.JFrame {
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         download.setEditable(false);
+        download.setBackground(java.awt.Color.white);
         download.setText("jTextField1");
         download.setBorder(null);
         download.setFocusable(false);
@@ -288,6 +332,7 @@ public class GameDetail extends javax.swing.JFrame {
         );
 
         size.setEditable(false);
+        size.setBackground(java.awt.Color.white);
         size.setText("jTextField1");
         size.setBorder(null);
         size.setFocusable(false);
@@ -319,6 +364,7 @@ public class GameDetail extends javax.swing.JFrame {
         );
 
         Rating.setEditable(false);
+        Rating.setBackground(java.awt.Color.white);
         Rating.setText("jTextField1");
         Rating.setBorder(null);
         Rating.setFocusable(false);
@@ -383,7 +429,30 @@ public class GameDetail extends javax.swing.JFrame {
 
         jPanel1.add(jPanel7, java.awt.BorderLayout.CENTER);
 
-        jLabel5.setText("Mô tả");
+        jLayeredPane9.setBackground(java.awt.Color.white);
+
+        jDesktopPane1.setBackground(java.awt.Color.white);
+
+        table1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {"1", null, null, null},
+                {"2", null, null, null},
+                {"3", null, null, null},
+                {"5", null, null, null},
+                {"4", null, null, null},
+                {"6", null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "No", "User", "Comment", "Rating"
+            }
+        ));
+        jScrollPane2.setViewportView(table1);
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel2.setText("Bình luận");
+
+        jButton2.setText("Mua hàng");
 
         jButton1.setText("Thêm vào giỏ hàng");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -392,18 +461,83 @@ public class GameDetail extends javax.swing.JFrame {
             }
         });
 
+        jDesktopPane1.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
+        jDesktopPane1.setLayout(jDesktopPane1Layout);
+        jDesktopPane1Layout.setHorizontalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 870, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)
+                        .addGap(8, 8, 8))))
+        );
+        jDesktopPane1Layout.setVerticalGroup(
+            jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
+                        .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(11, 11, 11)))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jDesktopPane2.setBackground(java.awt.Color.white);
+
         description.setEditable(false);
+        description.setBackground(java.awt.Color.white);
         description.setColumns(20);
         description.setRows(5);
         description.setFocusable(false);
         jScrollPane1.setViewportView(description);
 
-        jButton2.setText("Mua hàng");
+        jLabel5.setText("Mô tả");
 
-        jLayeredPane9.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane9.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane9.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane9.setLayer(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane2.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane2.setLayer(jLabel5, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jDesktopPane2Layout = new javax.swing.GroupLayout(jDesktopPane2);
+        jDesktopPane2.setLayout(jDesktopPane2Layout);
+        jDesktopPane2Layout.setHorizontalGroup(
+            jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopPane2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jDesktopPane2Layout.setVerticalGroup(
+            jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopPane2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel5)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jLayeredPane9.setLayer(jDesktopPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane9.setLayer(jDesktopPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane9Layout = new javax.swing.GroupLayout(jLayeredPane9);
         jLayeredPane9.setLayout(jLayeredPane9Layout);
@@ -412,29 +546,16 @@ public class GameDetail extends javax.swing.JFrame {
             .addGroup(jLayeredPane9Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jLayeredPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 930, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane9Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1))
-                    .addGroup(jLayeredPane9Layout.createSequentialGroup()
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                    .addComponent(jDesktopPane1)
+                    .addComponent(jDesktopPane2)))
         );
         jLayeredPane9Layout.setVerticalGroup(
             jLayeredPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane9Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jLayeredPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap())
+                .addGap(0, 0, 0)
+                .addComponent(jDesktopPane2)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         javax.swing.GroupLayout jPanel9Layout = new javax.swing.GroupLayout(jPanel9);
@@ -517,8 +638,11 @@ public class GameDetail extends javax.swing.JFrame {
     private javax.swing.JTextField download;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -539,7 +663,9 @@ public class GameDetail extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextField size;
+    private Swing.Table table1;
     // End of variables declaration//GEN-END:variables
 }

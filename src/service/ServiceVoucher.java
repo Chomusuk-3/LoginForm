@@ -29,7 +29,7 @@ public class ServiceVoucher {
     }
     
     public Long getCode(String CouponNumber) throws SQLException {   
-        String query = "SELECT valuee,status FROM codegame WHERE codenumber = ?";
+        String query = "SELECT valuee,status FROM coupon WHERE CouponNumber = ?";
         PreparedStatement val = con.prepareStatement(query);
         val.setString(1, CouponNumber);
         ResultSet rs = val.executeQuery();
