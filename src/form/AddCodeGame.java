@@ -198,7 +198,7 @@ public class AddCodeGame extends javax.swing.JPanel {
         Double value = Double.valueOf(txtValue.getText());
         con = DatabaseConnect.getInstance().getConnection();
         try {
-            PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Valuee, Status) VALUES(?,?,CURRENT_DATE,?,?)");
+            PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Value, Status) VALUES(?,?,CURRENT_DATE,?,?)");
             UUID uuid = UUID.randomUUID();
             p.setString(1, uuid.toString());
             p.setString(2, codenum);
@@ -243,7 +243,7 @@ public class AddCodeGame extends javax.swing.JPanel {
         con = DatabaseConnect.getInstance().getConnection();
         while(cnt != 0){
             try {
-                PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Valuee, Status) VALUES(?,?,CURRENT_DATE,?,?)");
+                PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Value, Status) VALUES(?,?,CURRENT_DATE,?,?)");
                 codenum = generateCodeNum();
                 UUID uuid = UUID.randomUUID();
                 p.setString(1, uuid.toString());

@@ -30,14 +30,14 @@ public class topUpService {
     }
     
     public double getCode(String codeNumber,String email,ModelUser user) throws SQLException {   
-        String query = "SELECT valuee,expireDate,status FROM codegame WHERE codenumber = ?";
+        String query = "SELECT value,expireDate,status FROM codegame WHERE codenumber = ?";
         PreparedStatement val = con.prepareStatement(query);
         val.setString(1, codeNumber);
         ResultSet rs = val.executeQuery();
         
         if (rs.next()) {
             // Retrieve the value from the result set
-            double value = Long.parseLong(rs.getString("valuee"));
+            double value = Long.parseLong(rs.getString("value"));
             String status = rs.getString("status");
             if(status.equals("used")){
                JOptionPane.showMessageDialog(null, "Thẻ đã được sử dụng");
@@ -122,7 +122,7 @@ public class topUpService {
     public void CodesGenerator(int number,double value) throws SQLException{
         for (int i = 0; i < number; i++) {
             String code = generateUniqueCode(12);
-            try (PreparedStatement p = con.prepareStatement("insert into codegame (codeid,codenumber,valuee,status) values (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement p = con.prepareStatement("insert into codegame (codeid,codenumber,value,status) values (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
             UUID uuid = UUID.randomUUID();
             p.setString(1, uuid.toString());
             p.setString(2, code);

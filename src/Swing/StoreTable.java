@@ -26,7 +26,7 @@ public class StoreTable extends JTable {
         setDefaultRenderer(Object.class, new DefaultTableCellRenderer(){
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                if(column != 5){
+                if(column != 6){
                     Component com = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                     com.setBackground(Color.WHITE);
                     setBorder(noFocusBorder);

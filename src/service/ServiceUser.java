@@ -25,7 +25,7 @@ public class ServiceUser {
     public void insertUser(ModelUser user) throws SQLException {
         String code;
         UUID uuid = UUID.randomUUID();
-        try (PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE,RROLE) values (?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE,ROLE) values (?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
             code = generateVerifyCode();
             
             p.setString(1, uuid.toString());
@@ -43,7 +43,7 @@ public class ServiceUser {
     public void insertDev(ModelUser user) throws SQLException {
         UUID uuid = UUID.randomUUID();
         String code;
-        try (PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE,RROLE) values (?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE,ROLE) values (?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
             code = generateVerifyCode();
             p.setString(1, uuid.toString());
             p.setString(2, user.getUserName());
@@ -153,7 +153,7 @@ public class ServiceUser {
     
     public ModelUser login(ModelLogin login) throws SQLException{
         ModelUser data = null;
-        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID, USERNAME, EMAIL, FIRSTNAME, LASTNAME, DATEOFBIRTH, PHONE, BALANCE, RROLE from USERS where EMAIL='%s' and PASSWORD='%s' AND STATUS='Verified' FETCH FIRST 1 ROW ONLY", login.getEmail(),login.getPassword()));
+        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID, USERNAME, EMAIL, FIRSTNAME, LASTNAME, DATEOFBIRTH, PHONE, BALANCE,ROLE from USERS where EMAIL='%s' and PASSWORD='%s' AND STATUS='Verified' FETCH FIRST 1 ROW ONLY", login.getEmail(),login.getPassword()));
         if(rs.next()){
             String userID = rs.getString(1);
             String userName = rs.getString(2);

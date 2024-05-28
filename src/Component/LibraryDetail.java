@@ -28,12 +28,12 @@ import java.sql.Blob;
  *
  * @author khoa
  */
-public class GameDetail extends javax.swing.JFrame {
+public class LibraryDetail extends javax.swing.JFrame {
     private final Connection con;
     private ModelGame game = null;
     private ModelCart Cart = new ModelCart();
     private DefaultTableModel model;
-    public GameDetail(ModelGame game,ModelCart Cart) {
+    public LibraryDetail(ModelGame game) {
         con = DatabaseConnect.getInstance().getConnection();
         
         try {
@@ -43,11 +43,9 @@ public class GameDetail extends javax.swing.JFrame {
             e.printStackTrace();
         }
         this.game = game;
-        this.Cart = Cart;
         setTitle("Game Details");
         setLocationRelativeTo(null);       
         initComponents();
-        initTableModel(); // Sau đó khởi tạo model cho bảng
         addData();
         loadJFrame();
     }
@@ -78,33 +76,7 @@ public class GameDetail extends javax.swing.JFrame {
         }
     }
     
-    private void initTableModel() {
-        model = new DefaultTableModel(
-            new Object [][] {},
-            new String [] {
-                "No", "User","Comment","Rating"
-            }
-        );
-        table1.setModel(model);
-    }
     private void addData() {
-        try {
-            model = (DefaultTableModel) table1.getModel();
-            model.setRowCount(0);
-            String gameID = game.getGameId();
-            int rowNum = 1;
-            ResultSet rs = con.createStatement().executeQuery("SELECT username,commenttext,rating FROM gamereview join users on users.userid = gamereview.userid where gameid = '"+ gameID +"' ");
-            while (rs.next()) {
-                String userID = rs.getString("username");
-                String gameName = rs.getString("commenttext");
-                String description = rs.getString("rating");  
-                System.out.println("heheh");
-                model.addRow(new Object[]{rowNum++,userID,gameName, description});
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(GameDetail.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         
     }
     /**
@@ -117,6 +89,7 @@ public class GameDetail extends javax.swing.JFrame {
     private void initComponents() {
 
         jSplitPane1 = new javax.swing.JSplitPane();
+        jMenuItem1 = new javax.swing.JMenuItem();
         jScrollPane4 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
@@ -147,14 +120,18 @@ public class GameDetail extends javax.swing.JFrame {
         jPanel9 = new javax.swing.JPanel();
         jLayeredPane9 = new javax.swing.JLayeredPane();
         jDesktopPane1 = new javax.swing.JDesktopPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        table1 = new Swing.Table();
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
         jDesktopPane2 = new javax.swing.JDesktopPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         description = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
+
+        jMenuItem1.setText("jMenuItem1");
 
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBackground(new java.awt.Color(255, 255, 255));
@@ -212,7 +189,7 @@ public class GameDetail extends javax.swing.JFrame {
         Dev.setEditable(false);
         Dev.setBackground(java.awt.Color.white);
         Dev.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        Dev.setText("jTextField1");
+        Dev.setText("Form Software");
         Dev.setBorder(null);
         Dev.setFocusable(false);
         Dev.addActionListener(new java.awt.event.ActionListener() {
@@ -290,9 +267,14 @@ public class GameDetail extends javax.swing.JFrame {
         Reday.setEditable(false);
         Reday.setBackground(java.awt.Color.white);
         Reday.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        Reday.setText("jTextField1");
+        Reday.setText("09/11/2024");
         Reday.setBorder(null);
         Reday.setFocusable(false);
+        Reday.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RedayActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("Release day");
@@ -354,7 +336,7 @@ public class GameDetail extends javax.swing.JFrame {
         download.setEditable(false);
         download.setBackground(java.awt.Color.white);
         download.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        download.setText("jTextField1");
+        download.setText("92");
         download.setBorder(null);
         download.setFocusable(false);
         download.addActionListener(new java.awt.event.ActionListener() {
@@ -393,7 +375,7 @@ public class GameDetail extends javax.swing.JFrame {
         size.setEditable(false);
         size.setBackground(java.awt.Color.white);
         size.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        size.setText("jTextField1");
+        size.setText("2094MB");
         size.setBorder(null);
         size.setFocusable(false);
 
@@ -427,7 +409,7 @@ public class GameDetail extends javax.swing.JFrame {
         Rating.setEditable(false);
         Rating.setBackground(java.awt.Color.white);
         Rating.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        Rating.setText("jTextField1");
+        Rating.setText("4.5");
         Rating.setBorder(null);
         Rating.setFocusable(false);
         Rating.addActionListener(new java.awt.event.ActionListener() {
@@ -498,36 +480,34 @@ public class GameDetail extends javax.swing.JFrame {
 
         jDesktopPane1.setBackground(java.awt.Color.white);
 
-        table1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"1", null, null, null},
-                {"2", null, null, null},
-                {"3", null, null, null},
-                {"5", null, null, null},
-                {"4", null, null, null},
-                {"6", null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "No", "User", "Comment", "Rating"
-            }
-        ));
-        jScrollPane2.setViewportView(table1);
-
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel2.setText("Bình luận");
 
-        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jButton1.setText("Add to Cart");
+        jButton1.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        jButton1.setText("Post ");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
             }
         });
 
-        jDesktopPane1.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jTextArea1.setColumns(20);
+        jTextArea1.setRows(5);
+        jScrollPane3.setViewportView(jTextArea1);
+
+        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
+        jComboBox1.setAlignmentX(1.0F);
+        jComboBox1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel3.setText("Rating:");
+
         jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jScrollPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jComboBox1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -536,25 +516,40 @@ public class GameDetail extends javax.swing.JFrame {
             .addGroup(jDesktopPane1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
                     .addGroup(jDesktopPane1Layout.createSequentialGroup()
                         .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 292, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 609, Short.MAX_VALUE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
+            .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
+                    .addContainerGap()))
         );
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2))
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0)))
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addContainerGap()
+                .addComponent(jLabel2)
+                .addGap(21, 165, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addContainerGap())
+            .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
+                    .addContainerGap(54, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(55, Short.MAX_VALUE)))
         );
 
         jDesktopPane2.setBackground(java.awt.Color.white);
@@ -658,6 +653,10 @@ public class GameDetail extends javax.swing.JFrame {
         Cart.addGame(game);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void RedayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RedayActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_RedayActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -700,12 +699,14 @@ public class GameDetail extends javax.swing.JFrame {
     private javax.swing.JTextField download;
     private javax.swing.JLabel image;
     private javax.swing.JButton jButton1;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JDesktopPane jDesktopPane3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
@@ -719,6 +720,7 @@ public class GameDetail extends javax.swing.JFrame {
     private javax.swing.JLayeredPane jLayeredPane7;
     private javax.swing.JLayeredPane jLayeredPane8;
     private javax.swing.JLayeredPane jLayeredPane9;
+    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel5;
@@ -726,10 +728,10 @@ public class GameDetail extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField size;
-    private Swing.Table table1;
     // End of variables declaration//GEN-END:variables
 }

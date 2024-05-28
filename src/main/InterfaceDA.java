@@ -15,6 +15,7 @@ import form.Form_3;
 import form.Form_4;
 import form.Purchased;
 import form.GameStore;
+import form.LibraryForm;
 import form.topup_form;
 import java.awt.Color;
 import java.awt.Container;
@@ -52,7 +53,7 @@ public class InterfaceDA extends javax.swing.JFrame {
                 }else if(index == 1){
                         setForm(new UserForm(user));
                 }else if(index == 2){
-                    setForm(new Form_3());
+                    setForm(new LibraryForm(user));
                 }else if(index ==3){
                     setForm(new CartForm(Cart,user));
                 }else if(index == 4){

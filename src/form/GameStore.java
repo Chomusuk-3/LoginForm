@@ -31,6 +31,8 @@ import javax.swing.JTable;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import model.ModelGame;
 import service.gameService;
 import model.ModelCart;
@@ -66,8 +68,19 @@ public class GameStore extends javax.swing.JPanel {
             int selectedRow = storeTable1.getSelectedRow();
             if (selectedRow != -1) {
                 try {
+                    String gameId = null;
+                    if (selectedRow != -1) {
+                        // Chuyển đổi hàng được chọn trong JTable sang hàng trong TableModel
+                        int modelRow = storeTable1.convertRowIndexToModel(selectedRow);
+
+                        // Lấy giá trị gameId từ mô hình bảng
+                        gameId = (String) model.getValueAt(modelRow, 5);
+                        System.out.println("Selected Game ID: " + gameId);
+                    } else {
+                        System.out.println("No row selected");
+                    }
                     System.out.println("hehe");
-                    String gameId = (String) storeTable1.getValueAt(selectedRow, 0);
+//                    String gameId = (String) storeTable1.getValueAt(selectedRow, 5);
                     System.out.println("haha");
                     ModelGame game = service.getGameDetail(gameId);
                     // Xử lý hành động khi nhấn vào hàng
@@ -112,48 +125,52 @@ public class GameStore extends javax.swing.JPanel {
                 }
 
                 // Use a placeholder image if imageIcon is nul
-                model.addRow(new Object[]{gameID, imageIcon != null ? imageIcon : "No image", gameName, description, price});
+                model.addRow(new Object[]{row++, imageIcon != null ? imageIcon : "No image", gameName, description, price,gameID});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error occurred while fetching data from database: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    
     private ImageIcon resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
         Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
         return new ImageIcon(resultingImage);
     }
     private void initTableModel() {
-        model = new DefaultTableModel(
-            new Object[][] {},
-            new String[] {"No", "Image", "Name", "Description", "Price"}
-        ) {
-            @Override
-            public Class<?> getColumnClass(int columnIndex) {
-                if (columnIndex == 1) {
-                    return ImageIcon.class;
-                }
-                return String.class;
+    model = new DefaultTableModel(
+        new Object[][] {},
+        new String[] {"No", "", "Name", "Description", "Price", "GameID"}
+    ) {
+        @Override
+        public Class<?> getColumnClass(int columnIndex) {
+            if (columnIndex == 1) {
+                return ImageIcon.class;
             }
-        };
-        storeTable1.setModel(model);
-        storeTable1.getColumnModel().getColumn(0).setPreferredWidth(2);
-        storeTable1.getColumnModel().getColumn(4).setPreferredWidth(2);
-        // Set the custom renderer for the image column
-        storeTable1.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                if (value instanceof ImageIcon) {
-                    setIcon((ImageIcon) value);
-                    setText("");
-                } else {
-                    setIcon(null);
-                }
-                return this;
+            return String.class;
+        }
+    };
+    storeTable1.setModel(model);
+    storeTable1.getColumnModel().getColumn(0).setPreferredWidth(2);
+    storeTable1.getColumnModel().getColumn(4).setPreferredWidth(2);
+    // Set the custom renderer for the image column
+    storeTable1.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (value instanceof ImageIcon) {
+                setIcon((ImageIcon) value);
+                setText("");
+            } else {
+                setIcon(null);
             }
-        });
-    }
+            return this;
+        }
+    });
+    // Hide the GameID column
+    TableColumnModel columnModel = storeTable1.getColumnModel();
+    TableColumn gameIDColumn = columnModel.getColumn(5);
+    columnModel.removeColumn(gameIDColumn);
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
