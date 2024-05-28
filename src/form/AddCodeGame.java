@@ -34,8 +34,6 @@ public class AddCodeGame extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtCodenumber = new app.bolivia.swing.JCTextField();
-        jLabel4 = new javax.swing.JLabel();
-        txtExpire = new app.bolivia.swing.JCTextField();
         jLabel5 = new javax.swing.JLabel();
         txtValue = new app.bolivia.swing.JCTextField();
         btbAdd = new Swing.ButtonOutLine();
@@ -43,8 +41,6 @@ public class AddCodeGame extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         txtQuantity = new app.bolivia.swing.JCTextField();
-        jLabel7 = new javax.swing.JLabel();
-        txtExpire2 = new app.bolivia.swing.JCTextField();
         jLabel8 = new javax.swing.JLabel();
         txtValue2 = new app.bolivia.swing.JCTextField();
         btbAddNum = new Swing.ButtonOutLine();
@@ -63,16 +59,6 @@ public class AddCodeGame extends javax.swing.JPanel {
         txtCodenumber.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 2, 0, 0, new java.awt.Color(0, 204, 255)));
         txtCodenumber.setForeground(new java.awt.Color(102, 102, 102));
         txtCodenumber.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 204, 255));
-        jLabel4.setText("Expire Date");
-
-        txtExpire.setBackground(new java.awt.Color(244, 244, 244));
-        txtExpire.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 204, 255)));
-        txtExpire.setForeground(new java.awt.Color(102, 102, 102));
-        txtExpire.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        txtExpire.setPlaceholder("VD : 12/07/2024");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 204, 255));
@@ -114,16 +100,6 @@ public class AddCodeGame extends javax.swing.JPanel {
         txtQuantity.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
         txtQuantity.setPlaceholder("VD : 5");
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel7.setForeground(new java.awt.Color(0, 204, 255));
-        jLabel7.setText("Expire Date");
-
-        txtExpire2.setBackground(new java.awt.Color(244, 244, 244));
-        txtExpire2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 2, 0, new java.awt.Color(0, 204, 255)));
-        txtExpire2.setForeground(new java.awt.Color(102, 102, 102));
-        txtExpire2.setFont(new java.awt.Font("SansSerif", 0, 14)); // NOI18N
-        txtExpire2.setPlaceholder("VD : 12/07/2024");
-
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(0, 204, 255));
         jLabel8.setText("Value");
@@ -154,21 +130,16 @@ public class AddCodeGame extends javax.swing.JPanel {
                         .addGap(20, 20, 20)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtExpire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCodenumber1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
+                        .addGap(76, 76, 76)
                         .addComponent(btbAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(98, 98, 98)
                 .addComponent(txtCodenumber, javax.swing.GroupLayout.PREFERRED_SIZE, 11, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(94, 94, 94)
-                        .addComponent(btbAddNum, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -176,10 +147,11 @@ public class AddCodeGame extends javax.swing.JPanel {
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtExpire2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtValue2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtValue2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(98, 98, 98)
+                        .addComponent(btbAddNum, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(89, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -196,11 +168,7 @@ public class AddCodeGame extends javax.swing.JPanel {
                         .addComponent(jLabel6)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtExpire2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(32, 32, 32)
                         .addComponent(jLabel8)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtValue2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -210,11 +178,7 @@ public class AddCodeGame extends javax.swing.JPanel {
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtCodenumber1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(19, 19, 19)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtExpire, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(34, 34, 34)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -224,21 +188,7 @@ public class AddCodeGame extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    public String getExpire() throws ParseException{
-        SimpleDateFormat inpFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = inpFormat.parse(txtExpire.getText().trim());
-        SimpleDateFormat oupFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String expire = oupFormat.format(date);
-        return expire;
-    }
     
-    public String getExpire2() throws ParseException{
-        SimpleDateFormat inpFormat = new SimpleDateFormat("dd/MM/yyyy");
-        Date date = inpFormat.parse(txtExpire2.getText().trim());
-        SimpleDateFormat oupFormat = new SimpleDateFormat("dd/MM/yyyy");
-        String expire = oupFormat.format(date);
-        return expire;
-    }
     
     
     
@@ -248,22 +198,18 @@ public class AddCodeGame extends javax.swing.JPanel {
         Double value = Double.valueOf(txtValue.getText());
         con = DatabaseConnect.getInstance().getConnection();
         try {
-            PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, ExpireDate, CreateDate, Valuee, Status) VALUES(?,?,TO_DATE(?, 'dd/MM/yyyy'),CURRENT_DATE,?,?)");
+            PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Valuee, Status) VALUES(?,?,CURRENT_DATE,?,?)");
             UUID uuid = UUID.randomUUID();
             p.setString(1, uuid.toString());
             p.setString(2, codenum);
-            p.setString(3, getExpire());
-            p.setDouble(4, value);
-            p.setString(5, "Active");
+            p.setDouble(3, value);
+            p.setString(4, "Active");
             p.execute();
             JOptionPane.showMessageDialog(null, "Add code success");
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } catch (ParseException ex) {
-            ex.printStackTrace();
         }
         txtCodenumber1.setText("");
-        txtExpire.setText("");
         txtValue.setText("");
     }//GEN-LAST:event_btbAddActionPerformed
 
@@ -297,25 +243,21 @@ public class AddCodeGame extends javax.swing.JPanel {
         con = DatabaseConnect.getInstance().getConnection();
         while(cnt != 0){
             try {
-                PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, ExpireDate, CreateDate, Valuee, Status) VALUES(?,?,TO_DATE(?, 'dd/MM/yyyy'),CURRENT_DATE,?,?)");
+                PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Valuee, Status) VALUES(?,?,CURRENT_DATE,?,?)");
                 codenum = generateCodeNum();
                 UUID uuid = UUID.randomUUID();
                 p.setString(1, uuid.toString());
                 p.setString(2, codenum);
-                p.setString(3, getExpire2());
-                p.setDouble(4, value);
-                p.setString(5, "Active");
+                p.setDouble(3, value);
+                p.setString(4, "Active");
                 p.execute();
                 cnt = cnt - 1;
             } catch (SQLException ex) {
                 ex.printStackTrace();
-            } catch (ParseException ex) {
-                Logger.getLogger(AddCodeGame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         JOptionPane.showMessageDialog(null, "Add code success");
         txtQuantity.setText("");
-        txtExpire2.setText("");
         txtValue2.setText("");
     }//GEN-LAST:event_btbAddNumActionPerformed
 
@@ -326,15 +268,11 @@ public class AddCodeGame extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private app.bolivia.swing.JCTextField txtCodenumber;
     private app.bolivia.swing.JCTextField txtCodenumber1;
-    private app.bolivia.swing.JCTextField txtExpire;
-    private app.bolivia.swing.JCTextField txtExpire2;
     private app.bolivia.swing.JCTextField txtQuantity;
     private app.bolivia.swing.JCTextField txtValue;
     private app.bolivia.swing.JCTextField txtValue2;

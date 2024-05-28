@@ -34,16 +34,16 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
     private ModelUser user;
     private ModelLogin dataLogin;
     
-    public PanelLoginAndRegister(ActionListener eventRegister, ActionListener eventLogin, ActionListener eventForget){
+    public PanelLoginAndRegister(ActionListener eventRegister, ActionListener eventLogin, ActionListener eventForget,ActionListener eventRegisterDev){
         initComponents();
-        initRegister(eventRegister);
+        initRegister(eventRegister,eventRegisterDev);
         initLogin(eventLogin);
         initForget(eventForget);
         login.setVisible(false);
         register.setVisible(true);
     }
-    private void initRegister(ActionListener eventRegister){
-        register.setLayout(new MigLayout("wrap","push[center]push","push[]25[]10[]10[]25[]push"));
+    private void initRegister(ActionListener eventRegister, ActionListener eventRegisterDev){
+        register.setLayout(new MigLayout("wrap","push[center]push","push[]25[]10[]10[]25[]10[]push"));
         JLabel label = new JLabel("Create Account");
         label.setFont(new Font("sansserif", 1, 30));
         label.setForeground(new Color(21, 244, 250));
@@ -76,8 +76,26 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
                 String userName = txtUser.getText().trim();
                 String email = txtEmail.getText().trim();
                 String password = String.valueOf(txtPassword.getPassword());
-                user = new ModelUser(userName,email,password);
+                String role = "User";
+                user = new ModelUser(null,userName, email, password, role);
             }
+        });
+        //nut dang ki la developer
+        Button cmdDev = new Button();
+        cmdDev.setBackground(new Color(21, 244, 250));
+        cmdDev.setForeground(new Color(250,250,250));
+        cmdDev.addActionListener(eventRegisterDev);
+        cmdDev.setText("SIGN UP AS DEVELOPER");
+        register.add(cmdDev,"w 40%, h 40");
+        cmdDev.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    String userName = txtUser.getText().trim();
+                    String email = txtEmail.getText().trim();
+                    String password = String.valueOf(txtPassword.getPassword());
+                    String role = "Developer";
+                    user = new ModelUser(null,userName, email, password, role);
+                }
         });
     }
     private void initLogin(ActionListener eventLogin){
@@ -96,13 +114,6 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
         txtPassword.setPrefixIcon(new ImageIcon(getClass().getResource("/icon/pass.png")));
         txtPassword.setHint("Password");
         login.add(txtPassword, "w 60%");
-        //nut quen mat khau
-//        JButton cmdForget = new JButton("Forgot your password ?");
-//        cmdForget.setForeground(new Color(100,100,100));
-//        cmdForget.setFont(new Font("sansserif", 1, 12));
-//        cmdForget.setContentAreaFilled(false);
-//        cmdForget.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//        login.add(cmdForget);
         //nut dang ki
         Button cmd = new Button();
         cmd.setBackground(new Color(21, 244, 250));
