@@ -12,7 +12,7 @@ public class ModelGame {
     public ModelGame() {
     }
 
-    public ModelGame(String gameId, String Description, String gameName, String Developer, Double Rating, Date releaseDay, int ageLim, int download, long size, double price) {
+    public ModelGame(String gameId, String Description, String gameName, String Developer, Double Rating, Date releaseDay, int ageLim, int download, long size, double price,ImageIcon image) {
         this.gameId = gameId;
         this.Description = Description;
         this.gameName = gameName;
@@ -23,6 +23,7 @@ public class ModelGame {
         this.download = download;
         this.size = size;
         this.price = price;
+        this.image = image;
     }
     public void setAgeLim(int ageLim) {
         this.ageLim = ageLim;
@@ -111,6 +112,13 @@ public class ModelGame {
     public void setSize(long size) {
         this.size = size;
     }
+    public void setImageIcon(ImageIcon imageIcon) {
+        this.image = imageIcon;
+    }
+
+    public ImageIcon getImage() {
+        return image;
+    }
     
     
     
@@ -125,6 +133,7 @@ public class ModelGame {
     private int download;
     private long size;
     double price;
+    private ImageIcon image;
 //    private image_gif;
     
 }

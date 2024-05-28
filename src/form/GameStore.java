@@ -6,17 +6,23 @@ package form;
 
 import javax.swing.JScrollPane;
 import javax.swing.*;
+import java.sql.Blob;
 import Component.GameDetail;
 import connection.DatabaseConnect;
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -60,8 +66,9 @@ public class GameStore extends javax.swing.JPanel {
             int selectedRow = storeTable1.getSelectedRow();
             if (selectedRow != -1) {
                 try {
+                    System.out.println("hehe");
                     String gameId = (String) storeTable1.getValueAt(selectedRow, 0);
-                   
+                    System.out.println("haha");
                     ModelGame game = service.getGameDetail(gameId);
                     // Xử lý hành động khi nhấn vào hàng
                     GameDetail gameDetailFrame = new GameDetail(game,Cart);
@@ -73,32 +80,79 @@ public class GameStore extends javax.swing.JPanel {
         }
     });
 }
-    private void addData() {
-    try {
-        model = (DefaultTableModel) storeTable1.getModel();
-        model.setRowCount(0);
-        ResultSet rs = con.createStatement().executeQuery("SELECT * FROM GAMES");
-        while (rs.next()) {
-            String gameID = rs.getString(1);
-            String gameName = rs.getString(2);
-            String description = rs.getString(4);
-            Double price = rs.getDouble(11);
-            model.addRow(new Object[]{gameID, gameName, description, price});
+        private void addData() {
+            storeTable1.setBorder(null);
+            storeTable1.setShowHorizontalLines(false);
+            storeTable1.setShowVerticalLines(false);
+        try {
+            model = (DefaultTableModel) storeTable1.getModel();
+            model.setRowCount(0);
+            ResultSet rs = con.createStatement().executeQuery("SELECT * FROM GAMES");
+            int row = 1;
+            while (rs.next()) {
+                String gameID = rs.getString(1);
+                String gameName = rs.getString(2);
+                String description = rs.getString(4);
+                Double price = rs.getDouble(11);
+                Blob imageBlob = rs.getBlob(12);
+                ImageIcon imageIcon = null;
+
+                // Handle null imageBlob
+                if (imageBlob != null) {
+                    try (InputStream inputStream = imageBlob.getBinaryStream()) {
+                        BufferedImage bufferedImage = ImageIO.read(inputStream);
+                        if (bufferedImage != null) {
+                            imageIcon = resizeImage(bufferedImage, 150, 80); // Resize to fit the table cell
+                        } else {
+                            System.err.println("BufferedImage is null for game " + gameID);
+                        }
+                    } catch (IOException e) {
+                        System.err.println("Error reading image for game " + gameID + ": " + e.getMessage());
+                    }
+                }
+
+                // Use a placeholder image if imageIcon is nul
+                model.addRow(new Object[]{gameID, imageIcon != null ? imageIcon : "No image", gameName, description, price});
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error occurred while fetching data from database: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    } catch (SQLException ex) {
-        ex.printStackTrace();
-        // Xử lý ngoại lệ theo ý của bạn, ví dụ: hiển thị một thông báo lỗi
-        JOptionPane.showMessageDialog(this, "Error occurred while fetching data from database: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
     }
+
+    private ImageIcon resizeImage(BufferedImage originalImage, int targetWidth, int targetHeight) {
+        Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+        return new ImageIcon(resultingImage);
     }
     private void initTableModel() {
         model = new DefaultTableModel(
-            new Object [][] {},
-            new String [] {
-                "No", "Name", "Description", "price"
+            new Object[][] {},
+            new String[] {"No", "Image", "Name", "Description", "Price"}
+        ) {
+            @Override
+            public Class<?> getColumnClass(int columnIndex) {
+                if (columnIndex == 1) {
+                    return ImageIcon.class;
+                }
+                return String.class;
             }
-        );
+        };
         storeTable1.setModel(model);
+        storeTable1.getColumnModel().getColumn(0).setPreferredWidth(2);
+        storeTable1.getColumnModel().getColumn(4).setPreferredWidth(2);
+        // Set the custom renderer for the image column
+        storeTable1.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
+            @Override
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+                if (value instanceof ImageIcon) {
+                    setIcon((ImageIcon) value);
+                    setText("");
+                } else {
+                    setIcon(null);
+                }
+                return this;
+            }
+        });
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -120,32 +174,27 @@ public class GameStore extends javax.swing.JPanel {
 
         storeTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "No", "Name", "Description", "price"
+                "No", "Image", "Name", "Description", "Price"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, false
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        storeTable1.setRowHeight(100);
+        storeTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(storeTable1);
+        if (storeTable1.getColumnModel().getColumnCount() > 0) {
+            storeTable1.getColumnModel().getColumn(0).setMinWidth(0);
+            storeTable1.getColumnModel().getColumn(0).setMaxWidth(5);
+        }
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));

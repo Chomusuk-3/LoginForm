@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.UUID;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -63,5 +64,72 @@ public class topUpService {
         String query = "Update codeGame set status = 'used' where codeNumber= '"+ codeNumber + "'";
         PreparedStatement val = con.prepareStatement(query);
         ResultSet rs = val.executeQuery();
+    }
+    public static String generateRandomCode(int length) {
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        StringBuilder code = new StringBuilder();
+        Random random = new Random();
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(chars.length());
+            code.append(chars.charAt(index));
+        }
+        return code.toString();
+    }
+
+    // Hàm kiểm tra xem mã đã tồn tại trong cơ sở dữ liệu chưa
+    public boolean isCodeExists(String code) {
+        boolean exists = false;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            String query = "SELECT COUNT(*) AS count FROM codegame WHERE code = ?";
+            statement = con.prepareStatement(query);
+            statement.setString(1, code);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                if (count > 0) {
+                    exists = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return exists;
+    }
+
+    // Hàm tạo mã thẻ cào không trùng lặp
+    public  String generateUniqueCode(int length) {
+        String code;
+        do {
+            code = generateRandomCode(length);
+        } while (isCodeExists(code));
+        return code;
+    }
+
+    // Phương thức main để kiểm tra hàm tạo mã thẻ cào không trùng lặp
+    public void CodesGenerator(int number,double value) throws SQLException{
+        for (int i = 0; i < number; i++) {
+            String code = generateUniqueCode(12);
+            try (PreparedStatement p = con.prepareStatement("insert into codegame (codeid,codenumber,valuee,status) values (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+            UUID uuid = UUID.randomUUID();
+            p.setString(1, uuid.toString());
+            p.setString(2, code);
+            p.setDouble(3, value);
+            p.setString(4, "Active");
+            p.execute();
+        }
+        }
     }
 }
