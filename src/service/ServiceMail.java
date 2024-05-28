@@ -20,6 +20,7 @@ public class ServiceMail {
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.auth", "true");
         prop.put("mail.smtp.starttls.enable", "true");
+        prop.put("mail.smtp.ssl.trust", "*");
         String username = "khaikhungkhiep12@gmail.com";
         String password = "fytb mmrb vpwx dlfc";    //  Your email password here
         Session session = Session.getInstance(prop, new javax.mail.Authenticator() {

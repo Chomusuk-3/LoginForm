@@ -18,23 +18,42 @@ import model.ModelLogin;
 public class ServiceUser {
 
     private final Connection con;
-    SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
     public ServiceUser() {
         con = DatabaseConnect.getInstance().getConnection();
     }
 
     public void insertUser(ModelUser user) throws SQLException {
         String code;
-        try (PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE) values (?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+        UUID uuid = UUID.randomUUID();
+        try (PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE,RROLE) values (?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
             code = generateVerifyCode();
-            UUID uuid = UUID.randomUUID();
+            
             p.setString(1, uuid.toString());
             p.setString(2, user.getUserName());
             p.setString(3, user.getEmail());
             p.setString(4, user.getPassword());
             p.setString(5, code);
+            p.setString(6, "User");
             p.execute();
         }
+        user.setUserID(uuid.toString());
+        user.setVerifyCode(code);
+    }
+    
+    public void insertDev(ModelUser user) throws SQLException {
+        UUID uuid = UUID.randomUUID();
+        String code;
+        try (PreparedStatement p = con.prepareStatement("insert into USERS (USERID,USERNAME, EMAIL, PASSWORD, VERIFYCODE,RROLE) values (?,?,?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS)) {
+            code = generateVerifyCode();
+            p.setString(1, uuid.toString());
+            p.setString(2, user.getUserName());
+            p.setString(3, user.getEmail());
+            p.setString(4, user.getPassword());
+            p.setString(5, code);
+            p.setString(6, "Developer");
+            p.execute();
+        }
+        user.setUserID(uuid.toString());
         user.setVerifyCode(code);
     }
 
@@ -87,45 +106,54 @@ public class ServiceUser {
          rs.close();
          return duplicate;
     }
-
-    public void doneVerify(String userName) throws SQLException {
-        PreparedStatement p = con.prepareStatement("update USERS set VERIFYCODE='', STATUS='Verified' where USERNAME=?");
-        p.setString(1, userName);
-        p.execute();
-        p.close();
-    }
-
-    public void deleteUsers(String Email) throws SQLException{
+    
+     public void deleteUsers(String Email) throws SQLException{
         PreparedStatement p = con.prepareStatement("Delete from USERS where EMAIL=? AND STATUS is null");
         p.setString(1,Email);
         p.execute();
         p.close();
     }
+
+    public void doneVerify(String userID) throws SQLException {
+        PreparedStatement p = con.prepareStatement("update USERS set VERIFYCODE='', STATUS='Verified' where USERID=?");
+        p.setString(1, userID);
+        p.execute();
+        p.close();
+    }
     
-    public boolean verifyCodeWithUser(String userName, String code) throws SQLException {
+    public boolean verifyCodeWithUser(String userID, String code) throws SQLException {
             boolean verify = false;
            
-            ResultSet rs = con.createStatement().executeQuery(String.format("select USERID from USERS where USERNAME='%s' and VERIFYCODE='%s'",userName,code));
+            ResultSet rs = con.createStatement().executeQuery(String.format("select USERID from USERS where USERID='%s' and VERIFYCODE='%s'",userID,code));
                if(rs.next()){
                 verify = true;
             }
-            
-//        PreparedStatement p = con.prepareStatement("select USERID from USERS where USERNAME=? and VERIFYCODE=? FETCH FIRST 1 ROW ONLY");
-//        p.setString(1, userName);
-//        p.setString(2, code);
-//        ResultSet r = p.executeQuery();
-//        if (r.next()) {
-//            verify = true;
-//        }
-//        r.close();
-//        p.close();
         rs.close();
         return verify;
     }
     
+    public void doneVerify2(String userName) throws SQLException {
+        PreparedStatement p = con.prepareStatement("update USERS set VERIFYCODE='', STATUS='Verified' where USERName=?");
+        p.setString(1, userName);
+        p.execute();
+        p.close();
+    }
+    
+    public boolean verifyCodeWithUser2(String userName, String code) throws SQLException {
+            boolean verify = false;
+           
+            ResultSet rs = con.createStatement().executeQuery(String.format("select USERID from USERS where USERName='%s' and VERIFYCODE='%s'",userName,code));
+               if(rs.next()){
+                verify = true;
+            }
+        rs.close();
+        return verify;
+    }
+    
+    
     public ModelUser login(ModelLogin login) throws SQLException{
         ModelUser data = null;
-        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID, USERNAME, EMAIL, FIRSTNAME, LASTNAME, DATEOFBIRTH, PHONE, BALANCE from USERS where EMAIL='%s' and PASSWORD='%s' AND STATUS='Verified' FETCH FIRST 1 ROW ONLY", login.getEmail(),login.getPassword()));
+        ResultSet rs = con.createStatement().executeQuery(String.format("select USERID, USERNAME, EMAIL, FIRSTNAME, LASTNAME, DATEOFBIRTH, PHONE, BALANCE, RROLE from USERS where EMAIL='%s' and PASSWORD='%s' AND STATUS='Verified' FETCH FIRST 1 ROW ONLY", login.getEmail(),login.getPassword()));
         if(rs.next()){
             String userID = rs.getString(1);
             String userName = rs.getString(2);
@@ -135,7 +163,8 @@ public class ServiceUser {
             Date Dob = rs.getDate(6);
             String Phone = rs.getString(7);
             Double Balance = rs.getDouble(8);
-            data = new ModelUser(userID, userName, Email, "", First, Last, Dob, Phone, Balance);
+            String Role = rs.getString(9);
+            data = new ModelUser(userID, userName, Email, "", First, Last, Dob, Phone, Balance, Role);
         }
         rs.close();
         return data;
@@ -160,14 +189,13 @@ public class ServiceUser {
     
     public ModelUser setUser(String email) throws SQLException{
         ModelUser user = null;
-        ResultSet rs = con.createStatement().executeQuery(String.format("select  USERNAME, FIRSTNAME, EMAIL, PASSWORD, VERIFYCODE from USERS where EMAIL='%s'",email));
+        ResultSet rs = con.createStatement().executeQuery(String.format("select  USERNAME, EMAIL, PASSWORD, VERIFYCODE from USERS where EMAIL='%s'",email));
         if(rs.next()){
-            String userID = rs.getString(1);
-            String userName = rs.getString(2);
-            String userEmail = rs.getString(3);
-            String userPass = rs.getString(4);
-            String userCode = rs.getString(5);
-            user = new ModelUser(userID, userName, userEmail, userPass, userCode);
+            String userName = rs.getString(1);
+            String userEmail = rs.getString(2);
+            String userPass = rs.getString(3);
+            String userCode = rs.getString(4);
+            user = new ModelUser( userName, userEmail, userPass, userCode);
         }
         rs.close();
         return user;

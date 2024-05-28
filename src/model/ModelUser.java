@@ -8,7 +8,14 @@ import java.util.UUID;
 
 
 public class ModelUser {
-    SimpleDateFormat formatDate = new SimpleDateFormat("dd/MM/yyyy");
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     public double getBalance() {
         return balance;
@@ -97,21 +104,22 @@ public class ModelUser {
     public ModelUser() {
     }
 
-    public ModelUser(String userID, String userName, String email, String password, String verifyCode) {
-        this.userID = userID;
+    public ModelUser( String userName, String email, String password, String verifyCode) {
         this.userName = userName;
         this.email = email;
         this.password = password;
         this.verifyCode = verifyCode;
     }
-    public ModelUser( String userName, String email, String password) {
+    public ModelUser( String userID,String userName, String email, String password, String role) {
+        this.userID = userID;
         this.userName = userName;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
     
 
-    public ModelUser(String userID, String userName, String email, String password, String firstname, String lastname,Date dob, String Phone, double balance) {
+    public ModelUser(String userID, String userName, String email, String password, String firstname, String lastname,Date dob, String Phone, double balance, String role) {
         this.userID = userID;
         this.userName = userName;
         this.email = email;
@@ -121,6 +129,7 @@ public class ModelUser {
         this.dob = dob;
         this.Phone = Phone;
         this.balance = balance;
+        this.role = role;
     }
 
     public ModelUser(String firstname, String lastname, Date dob, String Phone) {
@@ -142,4 +151,5 @@ public class ModelUser {
     private Date dob;
     private String Phone;
     private double balance;
+    private String role;
 }

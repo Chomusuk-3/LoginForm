@@ -55,6 +55,7 @@ public class UserForm extends javax.swing.JPanel {
             public void actionPerformed(ActionEvent e) {
                 try {
                     service.updateEdit(edit.getFirstName(), edit.getLastName(), edit.getDob(), edit.getPhone(), user.getUserName());
+                    JOptionPane.showMessageDialog(null, "edit success");
                     edit.setVisible(false);
                     lbFirstname.setText(edit.getFirstName());
                     lbLastname.setText(edit.getLastName());

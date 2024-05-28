@@ -74,7 +74,13 @@ public class main extends javax.swing.JFrame {
                 forget();
             }
         };
-        LoginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin, eventForget);
+        ActionListener eventRegisterDev = new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    RegisterDev();
+               }
+        };
+        LoginAndRegister = new PanelLoginAndRegister(eventRegister, eventLogin, eventForget, eventRegisterDev);
         TimingTarget target = new TimingTargetAdapter(){
             @Override
             public void timingEvent(float fraction) {
@@ -146,8 +152,8 @@ public class main extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent e) {
                 try {
                 ModelUser user =service.setUser(forget.getEmailCode());
-                if(service.verifyCodeWithUser(user.getUserName(), verifyCode2.getInputCode2())){
-                        service.doneVerify(user.getUserName());
+                if(service.verifyCodeWithUser2(user.getUserName(), verifyCode2.getInputCode2())){
+                        service.doneVerify2(user.getUserName());
                         showMessage(Message.MessageType.SUCCESS, "Change password success");
                         verifyCode2.setVisible(false);
                     }else{
@@ -185,8 +191,8 @@ public class main extends javax.swing.JFrame {
                 try {
                     ModelUser user = LoginAndRegister.getUser();
                    
-                    if(service.verifyCodeWithUser(user.getUserName(), verifyCode.getInputCode())){
-                        service.doneVerify(user.getUserName());
+                    if(service.verifyCodeWithUser(user.getUserID(), verifyCode.getInputCode())){
+                        service.doneVerify(user.getUserID());
                         service.deleteUsers(user.getEmail());
                         showMessage(Message.MessageType.SUCCESS, "Register success");
                         verifyCode.setVisible(false);
@@ -204,17 +210,18 @@ public class main extends javax.swing.JFrame {
     
     private void register(){
         ModelUser user = LoginAndRegister.getUser();
-        try {
+        try {   
             if(service.checkDuplicateUser(user.getUserName())){
                 showMessage(Message.MessageType.ERROR, "UserName already exit");
             }else if(service.checkDuplicateEmail(user.getEmail())){
                 showMessage(Message.MessageType.ERROR, "Email already exit");
+            }else if (user.getUserName().equals("")){
+                showMessage(Message.MessageType.ERROR, "Error Register");
             }else{
                 service.insertUser(user);
                 sendMain(user);
             }
         } catch (SQLException e) {
-            
             showMessage(Message.MessageType.ERROR, "Error Register");
         }
         
@@ -239,6 +246,24 @@ public class main extends javax.swing.JFrame {
     
     private void forget(){
         forget.setVisible(true);
+    }
+    
+    private void RegisterDev(){
+        ModelUser user = LoginAndRegister.getUser();
+        try {
+            if(service.checkDuplicateUser(user.getUserName())){
+                showMessage(Message.MessageType.ERROR, "UserName already exit");
+            }else if(service.checkDuplicateEmail(user.getEmail())){
+                showMessage(Message.MessageType.ERROR, "Email already exit");
+            }else if (user.getUserName().equals("")){
+                showMessage(Message.MessageType.ERROR, "Error Register");
+            }else{    
+                service.insertDev(user);
+                sendMain(user);
+            }
+        } catch (SQLException e) {
+            showMessage(Message.MessageType.ERROR, "Error Register");
+        }
     }
     
     private void sendMain(ModelUser user){
