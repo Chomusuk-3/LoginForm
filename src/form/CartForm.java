@@ -18,9 +18,11 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.ModelCart;
 import model.ModelGame;
+import model.ModelUser;
 import service.gameService;
 import service.ServiceVoucher;
 import service.topUpService;
+import service.ServicePayment;
 
 /**
  *
@@ -31,39 +33,24 @@ public class CartForm extends javax.swing.JPanel {
     private final Connection con;
     private DefaultTableModel model;
     private ServiceVoucher service;
+    private ServicePayment serviceP;
     private ModelCart Cart = new ModelCart();
+    private ModelUser user = new ModelUser();
     /**
      * Creates new form GameStore
      */
-    public CartForm(ModelCart Cart) {
+    public CartForm(ModelCart Cart,ModelUser user) {
         this.Cart = Cart;
+        this.user = user;
         service = new ServiceVoucher();
+        serviceP = new ServicePayment();
         con = DatabaseConnect.getInstance().getConnection();
         initComponents(); // Gọi initComponents() trước để khởi tạo các thành phần giao diện
         initTableModel(); // Sau đó khởi tạo model cho bảng
         addData(); // Cuối cùng là thêm dữ liệu vào bảng
 //        addTableClickListener();
     }
-//    private void addTableClickListener() {
-//    table1.addMouseListener(new MouseAdapter() {
-//        @Override
-//        public void mouseClicked(MouseEvent e) {
-//            int selectedRow = table1.getSelectedRow();
-//            if (selectedRow != -1) {
-//                try {
-//                    String gameId = (String) table1.getValueAt(selectedRow, 0);
-//                   
-//                    ModelGame game = service.getGameDetail(gameId);
-//                    // Xử lý hành động khi nhấn vào hàng
-//                    GameDetail gameDetailFrame = new GameDetail(game);
-//                    gameDetailFrame.setVisible(true);                   
-//                } catch (SQLException ex) {
-//                    Logger.getLogger(GameStore.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//        }
-//    });
-//    }
+
     private void initTableModel() {
         model = new DefaultTableModel(
             new Object [][] {},
@@ -88,7 +75,14 @@ public class CartForm extends javax.swing.JPanel {
         
         
     }
-    
+    private void empty(){
+        model = (DefaultTableModel) table1.getModel();
+        model.setRowCount(0);
+        Cart.emptyCart();
+        Total.setText("0.00 VND");
+        Total1.setText("0.00 VND");
+        Total2.setText("0.00 VND");
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -115,17 +109,33 @@ public class CartForm extends javax.swing.JPanel {
         Total2 = new javax.swing.JTextField();
         Total = new javax.swing.JTextField();
         Total1 = new javax.swing.JTextField();
-        jButton2 = new javax.swing.JButton();
+        paybtn = new javax.swing.JButton();
 
         jLabel2.setText("jLabel2");
 
+        setBackground(java.awt.Color.white);
         setLayout(new java.awt.BorderLayout());
 
+        jLayeredPane1.setBackground(java.awt.Color.white);
+
+        jLabel1.setBackground(java.awt.Color.white);
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setText("Giỏ hàng");
 
+        jScrollPane1.setBackground(java.awt.Color.white);
+
         table1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
                 {null, null, null},
                 {null, null, null},
                 {null, null, null},
@@ -171,6 +181,7 @@ public class CartForm extends javax.swing.JPanel {
             }
         });
 
+        jCheckBox1.setBackground(java.awt.Color.white);
         jCheckBox1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jCheckBox1.setText("Sử dụng voucher");
         jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
@@ -210,12 +221,15 @@ public class CartForm extends javax.swing.JPanel {
 
         jDesktopPane2.setBackground(java.awt.Color.white);
 
+        jLabel3.setBackground(java.awt.Color.white);
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel3.setText("Tổng:");
 
+        jLabel5.setBackground(java.awt.Color.white);
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel5.setText("Phải thanh toán:");
 
+        jLabel4.setBackground(java.awt.Color.white);
         jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jLabel4.setText("Giá đã giảm:");
 
@@ -255,18 +269,21 @@ public class CartForm extends javax.swing.JPanel {
         jDesktopPane3.setBackground(java.awt.Color.white);
 
         Total2.setEditable(false);
+        Total2.setBackground(java.awt.Color.white);
         Total2.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         Total2.setText("jTextField1");
         Total2.setBorder(null);
         Total2.setFocusable(false);
 
         Total.setEditable(false);
+        Total.setBackground(java.awt.Color.white);
         Total.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         Total.setText("jTextField1");
         Total.setBorder(null);
         Total.setFocusable(false);
 
         Total1.setEditable(false);
+        Total1.setBackground(java.awt.Color.white);
         Total1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         Total1.setText("0.0  VND");
         Total1.setBorder(null);
@@ -307,15 +324,20 @@ public class CartForm extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        jButton2.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jButton2.setText("Thanh toán");
+        paybtn.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        paybtn.setText("Thanh toán");
+        paybtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                paybtnActionPerformed(evt);
+            }
+        });
 
         jLayeredPane1.setLayer(jLabel1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jDesktopPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jDesktopPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jDesktopPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jButton2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(paybtn, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
@@ -332,8 +354,8 @@ public class CartForm extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jDesktopPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 571, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(39, Short.MAX_VALUE))
+                    .addComponent(paybtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(43, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -349,7 +371,7 @@ public class CartForm extends javax.swing.JPanel {
                         .addComponent(jDesktopPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jDesktopPane3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(paybtn, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7))
         );
 
@@ -377,10 +399,11 @@ public class CartForm extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
             String CouponNumber = Voucher.getText();
-            Total1.setText(String.valueOf(service.getCode(CouponNumber)));
+            Total1.setText(String.valueOf(service.getCode(CouponNumber)) + " VNĐ");
             Cart.setDiscount(service.getCode(CouponNumber));
+            System.out.print(service.getCode(CouponNumber));
             Cart.setgrantTotal();
-            Total2.setText(String.valueOf(Cart.getGrantTotal()));
+            Total2.setText(String.valueOf(Cart.getGrantTotal()) + "  VNĐ");
         } catch (SQLException ex) {
             Logger.getLogger(CartForm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -391,6 +414,22 @@ public class CartForm extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_Total1ActionPerformed
 
+    private void paybtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paybtnActionPerformed
+        if(Cart.getTotal() == 0){
+            JOptionPane.showMessageDialog(null, "Giỏ hàng rỗng!!");
+        }
+        else{
+            double subTotal = Cart.getTotal();
+            double Discount = Cart.getDiscount();
+            double grantTotal = Cart.getGrantTotal();
+            double value = 0 - grantTotal;
+            user.balanceEdit(value);
+            serviceP.MakePayment(user.getUserID(), grantTotal, Discount, subTotal,Cart.getGames());
+            JOptionPane.showMessageDialog(null, "Thanh toán thành công");
+            empty();
+        }       
+    }//GEN-LAST:event_paybtnActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Total;
@@ -398,7 +437,6 @@ public class CartForm extends javax.swing.JPanel {
     private javax.swing.JTextField Total2;
     private javax.swing.JTextField Voucher;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDesktopPane jDesktopPane2;
@@ -410,6 +448,7 @@ public class CartForm extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton paybtn;
     private Swing.Table table1;
     // End of variables declaration//GEN-END:variables
 }

@@ -171,16 +171,11 @@ public class topup_form extends javax.swing.JPanel {
 
         String code = jTextField1.getText();
         try {
-        Long value = service.getCode(code,user.getEmail(),user);
-        if (value != null) {
-            JOptionPane.showMessageDialog(null, "Value: " + value);
-        } else {
-            JOptionPane.showMessageDialog(null, "No matching code found.");
+        double value = service.getCode(code,user.getEmail(),user);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occurred while fetching the code value: " + e.getMessage());
         }
-    } catch (SQLException e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(null, "An error occurred while fetching the code value: " + e.getMessage());
-    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed

@@ -114,6 +114,8 @@ public class GameStore extends javax.swing.JPanel {
         storeTable1 = new Swing.StoreTable();
         jLabel1 = new javax.swing.JLabel();
 
+        jDesktopPane1.setBackground(java.awt.Color.white);
+
         jScrollPane1.setBorder(null);
 
         storeTable1.setModel(new javax.swing.table.DefaultTableModel(
@@ -146,7 +148,7 @@ public class GameStore extends javax.swing.JPanel {
         jScrollPane1.setViewportView(storeTable1);
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Game Store");
 
         jDesktopPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);

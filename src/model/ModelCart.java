@@ -12,11 +12,21 @@ public class ModelCart {
     private double discount = 0;
     private double grantTotal = 0;
     // Constructor của ModelCart
-
+    public void emptyCart(){
+        Total = 0 ; 
+        discount = 0;
+        grantTotal = 0;
+        games = new ArrayList<>();
+    }
     public void setgrantTotal() {
         this.grantTotal = Total - discount;
+        grandTotalCheck();
     }
-
+    public void grandTotalCheck(){
+        if(grantTotal <  0){
+            grantTotal = 0;
+        }
+    }
     public double getGrantTotal() {
         return grantTotal;
     }

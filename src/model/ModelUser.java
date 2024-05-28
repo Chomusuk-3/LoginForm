@@ -97,7 +97,7 @@ public class ModelUser {
         this.verifyCode = verifyCode;
     }
     
-     public void balanceEdit(long value) {
+     public void balanceEdit(double value) {
         this.balance += value;
     }
 

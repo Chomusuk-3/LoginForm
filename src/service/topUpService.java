@@ -28,7 +28,7 @@ public class topUpService {
         con = DatabaseConnect.getInstance().getConnection();
     }
     
-    public Long getCode(String codeNumber,String email,ModelUser user) throws SQLException {   
+    public double getCode(String codeNumber,String email,ModelUser user) throws SQLException {   
         String query = "SELECT valuee,expireDate,status FROM codegame WHERE codenumber = ?";
         PreparedStatement val = con.prepareStatement(query);
         val.setString(1, codeNumber);
@@ -36,19 +36,24 @@ public class topUpService {
         
         if (rs.next()) {
             // Retrieve the value from the result set
-            long value = Long.parseLong(rs.getString("valuee"));
+            double value = Long.parseLong(rs.getString("valuee"));
             String status = rs.getString("status");
-            Date expireDate = rs.getDate("expireDate");
-            JOptionPane.showMessageDialog(null, "Nạp thẻ thành công" + codeNumber + "\nGiá trị: " + value + "VNĐ");
-            topUp(value, email,user);
-            updateCodeGame(codeNumber);
+            if(status.equals("used")){
+               JOptionPane.showMessageDialog(null, "Thẻ đã được sử dụng");
+                
+            }else{
+                JOptionPane.showMessageDialog(null, "Nạp thẻ thành công" + codeNumber + "\nGiá trị: " + value + "VNĐ");
+                topUp(value, email,user);
+                updateCodeGame(codeNumber);
+            }
+            
             return value;
         } else {
             JOptionPane.showMessageDialog(null, "Mã thẻ không hợp lệ!");
         }
         return 0L;
     }
-    public void topUp(Long value,String email,ModelUser user)throws SQLException{
+    public void topUp(double value,String email,ModelUser user)throws SQLException{
         String query = "Update users set balance = balance + '"+ value +"' where email= '"+ email + "'";
         PreparedStatement val = con.prepareStatement(query);
         user.balanceEdit(value);

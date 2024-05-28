@@ -54,7 +54,7 @@ public class InterfaceDA extends javax.swing.JFrame {
                 }else if(index == 2){
                     setForm(new Form_3());
                 }else if(index ==3){
-                    setForm(new CartForm(Cart));
+                    setForm(new CartForm(Cart,user));
                 }else if(index == 4){
                     try {
                         setForm(new Purchased(user));
