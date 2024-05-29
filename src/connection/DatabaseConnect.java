@@ -20,7 +20,7 @@ public class DatabaseConnect {
         
     }
     public void connectToDataBase() throws SQLException{
-        String dbURL = "jdbc:oracle:thin:@192.168.56.1:1521:orcl";
+        String dbURL = "jdbc:oracle:thin:@localhost:1521:orcl";
         String username = "DoAn";
         String password = "password";
         connection = DriverManager.getConnection(dbURL, username, password);

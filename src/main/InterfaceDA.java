@@ -42,10 +42,10 @@ public class InterfaceDA extends javax.swing.JFrame {
         this.Cart = Cart;
         initComponents();
         getContentPane().setBackground(new Color(0,0,0,0));
-        menu.menuSetuser(user);
-        menu.init();
-        menu.initMoving(InterfaceDA.this);     
-        menu.addEventMenuSelected(new EventMenuSelected() {
+        menu1.menuSetuser(user);
+        menu1.init();
+        menu1.initMoving(InterfaceDA.this);     
+        menu1.addEventMenuSelected(new EventMenuSelected() {
             @Override
             public void selected(int index) {
                 if(index == 0){
@@ -71,7 +71,7 @@ public class InterfaceDA extends javax.swing.JFrame {
                     setForm(new AddCodeGame());
                 }else if(index == 8 && user.getRole().equals("Admin")){
                     setForm(new AddCoupon());
-                }else if(index == 9){
+                }else if(index == 13){
                     dispose();
                     new main().setVisible(true);
                 }
@@ -95,31 +95,32 @@ public class InterfaceDA extends javax.swing.JFrame {
     private void initComponents() {
 
         panelBorder1 = new Swing.PanelBorder();
-        menu = new Component.Menu();
+        menu1 = new Component.Menu();
         mainPanel = new javax.swing.JPanel();
+        header1 = new Component.Header();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
         panelBorder1.setBackground(new java.awt.Color(242, 242, 242));
 
+        mainPanel.setBackground(new java.awt.Color(242, 242, 242));
         mainPanel.setOpaque(false);
         mainPanel.setLayout(new java.awt.BorderLayout());
+        mainPanel.add(header1, java.awt.BorderLayout.PAGE_START);
 
         javax.swing.GroupLayout panelBorder1Layout = new javax.swing.GroupLayout(panelBorder1);
         panelBorder1.setLayout(panelBorder1Layout);
         panelBorder1Layout.setHorizontalGroup(
             panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelBorder1Layout.createSequentialGroup()
-                .addComponent(menu, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 635, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, 0))
+                .addComponent(menu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 867, Short.MAX_VALUE))
         );
         panelBorder1Layout.setVerticalGroup(
-            panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-            .addComponent(menu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(mainPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            panelBorder1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(menu1, javax.swing.GroupLayout.DEFAULT_SIZE, 595, Short.MAX_VALUE)
+            .addComponent(mainPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -178,8 +179,9 @@ public class InterfaceDA extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private Component.Header header1;
     private javax.swing.JPanel mainPanel;
-    private Component.Menu menu;
+    private Component.Menu menu1;
     private Swing.PanelBorder panelBorder1;
     // End of variables declaration//GEN-END:variables
 }
