@@ -17,7 +17,7 @@ public class Purchased extends javax.swing.JPanel {
         con =  DatabaseConnect.getInstance().getConnection();
         initComponents();
         spTable.setVerticalScrollBar(new ScrollBar());
-        ResultSet rs = con.createStatement().executeQuery(String.format("SELECT PAYMENTDETAIL.PAYMENTID,GAMENAME,TOTAL,DATECREATE FROM PAYMENTDETAIL INNER JOIN PAYMENT ON PAYMENTDETAIL.PAYMENTID = PAYMENT.PAYMENTID INNER JOIN GAMES ON PAYMENTDETAIL.GAMEID = GAMES.GAMEID WHERE USERID = '%s'", user.getUserID()));
+        ResultSet rs = con.createStatement().executeQuery(String.format("SELECT PAYMENTDETAIL.PAYMENTID,GAMENAME,TOTAL,DATECREATE FROM PAYMENTDETAIL INNER JOIN PAYMENT ON PAYMENTDETAIL.PAYMENTID = PAYMENT.PAYMENTID INNER JOIN GAMES ON PAYMENTDETAIL.GAMEID = GAMES.GAMEID WHERE PAYMENT.USERID = '%s'", user.getUserID()));
         while(rs.next()){
             String id = rs.getString(1);
             String game = rs.getString(2);

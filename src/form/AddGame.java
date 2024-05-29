@@ -22,13 +22,16 @@ import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import model.ModelUser;
 
 
 public class AddGame extends javax.swing.JPanel {
 
+     private ModelUser user;
     private Connection con;
     String path2 = null;
-    public AddGame() {
+    public AddGame(ModelUser user) {
+        this.user = user;
         initComponents();
         sp.setVerticalScrollBar(new ScrollBar());
     }
@@ -398,19 +401,20 @@ public class AddGame extends javax.swing.JPanel {
         String descrip = txtDes.getText().trim();
         con = DatabaseConnect.getInstance().getConnection();
         try {
-            PreparedStatement p = con.prepareStatement("INSERT INTO GAMES(GAMEID, GAMENAME, DEVELOPERNAME, Description, SDescription, ReleaseDay, AgeLimit, GameSize, Price, image) VALUES (?,?,?,?,?,TO_DATE(?, 'dd/MM/yyyy'),?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+            PreparedStatement p = con.prepareStatement("INSERT INTO GAMES(GAMEID, UserID, GAMENAME, DEVELOPERNAME, Description, SDescription, ReleaseDay, AgeLimit, GameSize, Price, image) VALUES (?,?,?,?,?,?,TO_DATE(?, 'dd/MM/yyyy'),?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
             UUID uuid = UUID.randomUUID();
             p.setString(1, uuid.toString());
-            p.setString(2, gamename);
-            p.setString(3, dev);
-            p.setString(4, descrip);
-            p.setString(5, SDes);
-            p.setString(6, getRelease());
-            p.setInt(7, age);
-            p.setDouble(8, size);
-            p.setDouble(9, price);
+            p.setString(2, user.getUserID());
+            p.setString(3, gamename);
+            p.setString(4, dev);
+            p.setString(5, descrip);
+            p.setString(6, SDes);
+            p.setString(7, getRelease());
+            p.setInt(8, age);
+            p.setDouble(9, size);
+            p.setDouble(10, price);
             InputStream is = new FileInputStream(new File(path2));
-            p.setBlob(10, is);
+            p.setBlob(11, is);
             p.execute();
         } catch (SQLException | ParseException ex) {
             ex.printStackTrace();

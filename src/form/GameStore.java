@@ -104,10 +104,10 @@ public class GameStore extends javax.swing.JPanel {
             int row = 1;
             while (rs.next()) {
                 String gameID = rs.getString(1);
-                String gameName = rs.getString(2);
-                String description = rs.getString(4);
-                Double price = rs.getDouble(11);
-                Blob imageBlob = rs.getBlob(12);
+                String gameName = rs.getString(3);
+                String description = rs.getString(5);
+                Double price = rs.getDouble(12);
+                Blob imageBlob = rs.getBlob(13);
                 ImageIcon imageIcon = null;
 
                 // Handle null imageBlob

@@ -66,7 +66,7 @@ public class InterfaceDA extends javax.swing.JFrame {
                 else if(index == 5){
                     setForm(new topup_form(user));
                 }else if(index == 6 && (user.getRole().equals("Admin") || user.getRole().equals("Developer"))){
-                    setForm(new AddGame());
+                    setForm(new AddGame(user));
                 }else if(index == 7 && user.getRole().equals("Admin")){
                     setForm(new AddCodeGame());
                 }else if(index == 8 && user.getRole().equals("Admin")){

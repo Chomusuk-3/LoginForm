@@ -3,21 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/connection/DatabaseConnect.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/form/topup_form.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/Swing/Table.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/service/topUpService.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/event/EventMenuSelected.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/service/gameService.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/service/ServiceVoucher.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/main/main.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/form/CartForm.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/service/ServiceUser.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/model/ModelGame.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/main/InterfaceDA.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/Component/GameDetail.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/form/GameStore.java</file>
-            <file>file:/E:/JavaProject/New%20folder/LoginForm/src/form/AddCodeGame.java</file>
+            <file>file:/C:/Users/Admin/Downloads/DoAn/LoginForm/src/main/main.java</file>
+            <file>file:/C:/Users/Admin/Downloads/DoAn/LoginForm/src/Component/Menu.java</file>
+            <file>file:/C:/Users/Admin/Downloads/DoAn/LoginForm/src/form/AddCoupon.java</file>
+            <file>file:/C:/Users/Admin/Downloads/DoAn/LoginForm/src/form/AddCodeGame.java</file>
+            <file>file:/C:/Users/Admin/Downloads/DoAn/LoginForm/src/main/InterfaceDA.java</file>
         </group>
     </open-files>
 </project-private>
