@@ -29,19 +29,14 @@ public class ServiceVoucher {
     }
     
     public Long getCode(String CouponNumber) throws SQLException {   
-        String query = "SELECT valuee,status FROM coupon WHERE CouponNumber = ?";
+        String query = "SELECT value,status FROM coupon WHERE CouponNumber = ?";
         PreparedStatement val = con.prepareStatement(query);
         val.setString(1, CouponNumber);
         ResultSet rs = val.executeQuery();
-        
         if (rs.next()) {
+            String status = rs.getString("status");
             // Retrieve the value from the result set
-            long value = Long.parseLong(rs.getString("valuee"));
-//            String status = rs.getString("status");
-//            Date expireDate = rs.getDate("expireDate");
-//            JOptionPane.showMessageDialog(null, "Nạp thẻ thành công" + CouponNumber + "\nGiá trị: " + value + "VNĐ");
-//            topUp(value, email,user);
-//            updateCodeGame(codeNumber);
+            long value = Long.parseLong(rs.getString("value"));
             return value;
         } else {
             JOptionPane.showMessageDialog(null, "Mã thẻ không hợp lệ!");
@@ -54,9 +49,23 @@ public class ServiceVoucher {
 //        user.balanceEdit(value);
 //        ResultSet rs = val.executeQuery();
 //    }
-//    public void updateCodeGame(String codeNumber)throws SQLException{
-//        String query = "Update codeGame set status = 'used' where codeNumber= '"+ codeNumber + "'";
-//        PreparedStatement val = con.prepareStatement(query);
-//        ResultSet rs = val.executeQuery();
-//    }
+    public void updateCoupon(String couponNumber)throws SQLException{
+        String query = "Update coupon set used=used + 1 where couponNumber= '"+ couponNumber + "'";
+        PreparedStatement val = con.prepareStatement(query);
+        ResultSet rs = val.executeQuery();
+    }
+    public boolean couponCheck(String couponNumber) throws SQLException{
+        String query = "SELECT value,status FROM coupon WHERE CouponNumber = ?";
+        PreparedStatement val = con.prepareStatement(query);
+        val.setString(1, couponNumber);
+        ResultSet rs = val.executeQuery();
+        if (rs.next()) {
+            String status = rs.getString("status");
+            if(status.equals("Used")){
+                return true;
+            }    
+            return false;
+        } 
+        return false;
+    }
 }

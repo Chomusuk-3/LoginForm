@@ -38,13 +38,18 @@ public class Menu extends javax.swing.JPanel {
         this.user = user;
     }
      public void init(){
-        listMenu1.addItem(new Model_Menu("1", "Store", Model_Menu.MenuType.MENU));
+        if(!user.getRole().equals("Developer")){
+            listMenu1.addItem(new Model_Menu("1", "Store", Model_Menu.MenuType.MENU));
+        }
+        if(user.getRole().equals("Developer")){
+            listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));
+        }
         listMenu1.addItem(new Model_Menu("7", "User", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("2", "Game Library", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("6", "Cart", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("3", "Purchased", Model_Menu.MenuType.MENU));
         listMenu1.addItem(new Model_Menu("4", "Top-up", Model_Menu.MenuType.MENU));
-        if(user.getRole().equals("Admin") || user.getRole().equals("Developer")){
+        if(user.getRole().equals("Developer")){
             listMenu1.addItem(new Model_Menu("8", "Add Game", Model_Menu.MenuType.MENU));
         }else{
             listMenu1.addItem(new Model_Menu("", " ", Model_Menu.MenuType.EMPTY));

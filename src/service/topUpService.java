@@ -57,7 +57,6 @@ public class topUpService {
     public void topUp(double value,String email,ModelUser user)throws SQLException{
         String query = "Update users set balance = balance + '"+ value +"' where email= '"+ email + "'";
         PreparedStatement val = con.prepareStatement(query);
-        user.balanceEdit(value);
         ResultSet rs = val.executeQuery();
     }
     public void updateCodeGame(String codeNumber)throws SQLException{

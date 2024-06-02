@@ -1,9 +1,22 @@
 
 package model;
 
+import connection.DatabaseConnect;
+import java.awt.Image;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import service.gameService;
 
 
 
@@ -18,6 +31,16 @@ public class ModelUser {
     }
 
     public double getBalance() {
+        double balance = 0;
+        try {
+            ResultSet rs = con.createStatement().executeQuery("SELECT balance from users where userid = '"+ userID+ "'");
+            while (rs.next()) {
+                balance = rs.getDouble("balance");
+               
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ModelUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return balance;
     }
 
@@ -130,6 +153,7 @@ public class ModelUser {
         this.Phone = Phone;
         this.balance = balance;
         this.role = role;
+        con = DatabaseConnect.getInstance().getConnection();
     }
 
     public ModelUser(String firstname, String lastname, Date dob, String Phone) {
@@ -139,8 +163,8 @@ public class ModelUser {
         this.Phone = Phone;
     }
     
-
     
+    private Connection con;
     private String userID;
     private String userName;
     private String email;

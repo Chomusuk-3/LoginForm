@@ -77,7 +77,7 @@ public class InterfaceDA extends javax.swing.JFrame {
                 }
             }
         });
-        setForm(new GameStore(Cart)); // start system with form store
+        setForm(new UserForm(user)); // start system with form store
         
     }
     

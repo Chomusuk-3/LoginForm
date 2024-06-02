@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.UIManager;
 import javax.swing.event.AncestorListener;
 import main.main;
 import model.ModelUser;
@@ -34,6 +35,11 @@ public class UserForm extends javax.swing.JPanel {
     Edit edit = new Edit();
     private ServiceUser service;
     public UserForm(ModelUser user)  {
+        try {
+        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+        } catch (Exception e) {
+        e.printStackTrace();
+        }
         String outputString;
         service = new ServiceUser();
         initComponents();

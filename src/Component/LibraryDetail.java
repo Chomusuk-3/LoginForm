@@ -6,9 +6,12 @@ package Component;
 import connection.DatabaseConnect;
 import javax.swing.*;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -24,6 +27,8 @@ import javax.swing.table.DefaultTableModel;
 import model.ModelGame;
 import model.ModelCart;
 import java.sql.Blob;
+import model.ModelUser;
+import service.ServiceReview;
 /**
  *
  * @author khoa
@@ -32,8 +37,10 @@ public class LibraryDetail extends javax.swing.JFrame {
     private final Connection con;
     private ModelGame game = null;
     private ModelCart Cart = new ModelCart();
+    private ModelUser user = new ModelUser();
     private DefaultTableModel model;
-    public LibraryDetail(ModelGame game) {
+    private ServiceReview service = new ServiceReview();
+    public LibraryDetail(ModelGame game,ModelUser user) {
         con = DatabaseConnect.getInstance().getConnection();
         
         try {
@@ -43,6 +50,7 @@ public class LibraryDetail extends javax.swing.JFrame {
             e.printStackTrace();
         }
         this.game = game;
+        this.user = user;
         setTitle("Game Details");
         setLocationRelativeTo(null);       
         initComponents();
@@ -123,9 +131,10 @@ public class LibraryDetail extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        Comment = new javax.swing.JTextArea();
+        ratingSelected = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
+        downloadBtn = new javax.swing.JButton();
         jDesktopPane2 = new javax.swing.JDesktopPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         description = new javax.swing.JTextArea();
@@ -491,23 +500,32 @@ public class LibraryDetail extends javax.swing.JFrame {
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane3.setViewportView(jTextArea1);
+        Comment.setColumns(20);
+        Comment.setRows(5);
+        jScrollPane3.setViewportView(Comment);
 
-        jComboBox1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
-        jComboBox1.setAlignmentX(1.0F);
-        jComboBox1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        ratingSelected.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        ratingSelected.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5" }));
+        ratingSelected.setAlignmentX(1.0F);
+        ratingSelected.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
         jLabel3.setText("Rating:");
 
+        downloadBtn.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        downloadBtn.setText("Download");
+        downloadBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downloadBtnActionPerformed(evt);
+            }
+        });
+
         jDesktopPane1.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jButton1, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jScrollPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jDesktopPane1.setLayer(jComboBox1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(ratingSelected, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jDesktopPane1.setLayer(jLabel3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane1.setLayer(downloadBtn, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jDesktopPane1Layout = new javax.swing.GroupLayout(jDesktopPane1);
         jDesktopPane1.setLayout(jDesktopPane1Layout);
@@ -517,14 +535,14 @@ public class LibraryDetail extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 609, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(ratingSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 609, Short.MAX_VALUE)
+                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(downloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jDesktopPane1Layout.createSequentialGroup()
@@ -535,14 +553,15 @@ public class LibraryDetail extends javax.swing.JFrame {
         jDesktopPane1Layout.setVerticalGroup(
             jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDesktopPane1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addGap(21, 165, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(downloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jDesktopPane1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 123, Short.MAX_VALUE)
                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ratingSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addContainerGap())
             .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -650,12 +669,26 @@ public class LibraryDetail extends javax.swing.JFrame {
     }//GEN-LAST:event_RatingActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Cart.addGame(game);
+        String comment = Comment.getText();
+        String selectedRating = (String) ratingSelected.getSelectedItem();
+        int rating = Integer.parseInt(selectedRating);
+        service.saveReviewSection(user.getUserID(), game.getGameId(), comment, rating);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void RedayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RedayActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_RedayActionPerformed
+
+    private void downloadBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadBtnActionPerformed
+        String url = "https://drive.google.com/file/d/1lDKKpo7I9FkqqHC0dGSi7C26quaKWQqt/view?usp=drive_link";               
+        try {
+            // Sử dụng lớp Desktop để mở URL
+            Desktop.getDesktop().browse(new URI(url));
+        } catch (IOException | URISyntaxException ex) {
+            // Xử lý lỗi nếu không thể mở URL
+            ex.printStackTrace();
+        }
+    }//GEN-LAST:event_downloadBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -691,15 +724,16 @@ public class LibraryDetail extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea Comment;
     private javax.swing.JTextField Dev;
     private javax.swing.JTextField Name;
     private javax.swing.JTextField Rating;
     private javax.swing.JTextField Reday;
     private javax.swing.JTextArea description;
     private javax.swing.JTextField download;
+    private javax.swing.JButton downloadBtn;
     private javax.swing.JLabel image;
     private javax.swing.JButton jButton1;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JDesktopPane jDesktopPane3;
@@ -731,7 +765,7 @@ public class LibraryDetail extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSplitPane jSplitPane1;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JComboBox<String> ratingSelected;
     private javax.swing.JTextField size;
     // End of variables declaration//GEN-END:variables
 }

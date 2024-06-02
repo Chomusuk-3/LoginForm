@@ -655,7 +655,14 @@ public class GameDetail extends javax.swing.JFrame {
     }//GEN-LAST:event_RatingActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Cart.addGame(game);
+        if(Cart.hasGame(game.getGameId())){
+            JOptionPane.showMessageDialog(null, "Game đã được thêm vào giỏ hàng.");
+        }
+        else{
+            Cart.addGame(game);
+            JOptionPane.showMessageDialog(null, "Thêm vào giỏ hàng thành công");
+            dispose();
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

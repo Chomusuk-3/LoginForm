@@ -132,7 +132,7 @@ public class AddCoupon extends javax.swing.JPanel {
         int totaluse = Integer.parseInt(txtTotalUse.getText());
         con = DatabaseConnect.getInstance().getConnection();
          try {
-             PreparedStatement p = con.prepareStatement("INSERT INTO COUPON(CouponID, CouponNumber, Valuee, CreateDate, Total, Status) VALUES (?,?,?,CURRENT_DATE,?,?)");
+             PreparedStatement p = con.prepareStatement("INSERT INTO COUPON(CouponID, CouponNumber, Value, CreateDate, Total, Status) VALUES (?,?,?,CURRENT_DATE,?,?)");
              UUID uuid = UUID.randomUUID();
              p.setString(1, uuid.toString());
              p.setString(2, couponcode);

@@ -41,7 +41,9 @@ public class LibraryForm extends javax.swing.JPanel {
     private final Connection con;
     private DefaultTableModel model;
     private gameService service = new gameService();
+    private ModelUser user = new ModelUser();
     public LibraryForm(ModelUser user) {
+        this.user = user;
         con = DatabaseConnect.getInstance().getConnection();
         initComponents(); // Gọi initComponents() trước để khởi tạo các thành phần giao diện
         initTableModel(); // Sau đó khởi tạo model cho bảng
@@ -55,7 +57,7 @@ public class LibraryForm extends javax.swing.JPanel {
         try {
             model = (DefaultTableModel) table1.getModel();
             model.setRowCount(0);
-            ResultSet rs = con.createStatement().executeQuery("SELECT library.gameid,gamename,developername,description,SDescription,rating,releaseDay,agelimit,downloaded,gamesize,price,image FROM library join games on library.gameid = games.gameid");
+            ResultSet rs = con.createStatement().executeQuery("SELECT library.gameid,gamename,developername,description,SDescription,rating,releaseDay,agelimit,downloaded,gamesize,price,image FROM library join games on library.gameid = games.gameid where library.userid='"+user.getUserID()+"'");
             int row = 1;
             while (rs.next()) {
                 String gameID = rs.getString(1);
@@ -148,7 +150,7 @@ public class LibraryForm extends javax.swing.JPanel {
                     System.out.println("haha");
                     ModelGame game = service.getGameDetail(gameId);
                     // Xử lý hành động khi nhấn vào hàng
-                    LibraryDetail gameDetailFrame = new LibraryDetail(game);
+                    LibraryDetail gameDetailFrame = new LibraryDetail(game,user);
                     gameDetailFrame.setVisible(true);                   
                 } catch (SQLException ex) {
                     Logger.getLogger(GameStore.class.getName()).log(Level.SEVERE, null, ex);
@@ -170,6 +172,7 @@ public class LibraryForm extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         table1 = new Swing.Table();
 
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
         jLabel1.setText("Library");
 
         table1.setModel(new javax.swing.table.DefaultTableModel(
@@ -183,6 +186,7 @@ public class LibraryForm extends javax.swing.JPanel {
                 "No", "", "Game", "Developer"
             }
         ));
+        table1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         table1.setRowHeight(100);
         jScrollPane1.setViewportView(table1);
 
@@ -194,8 +198,8 @@ public class LibraryForm extends javax.swing.JPanel {
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 605, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 832, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(119, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -204,7 +208,7 @@ public class LibraryForm extends javax.swing.JPanel {
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(14, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
