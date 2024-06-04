@@ -11,7 +11,16 @@ public class ModelCart {
     private double Total = 0 ; 
     private double discount = 0;
     private double grantTotal = 0;
+    private String userID;
     // Constructor của ModelCart
+
+    public String getUserID() {
+        return userID;
+    }
+    public void setUserID(String userID) {
+        this.userID = userID;
+    }
+    
     public boolean hasGame(String gameid) {
         for (ModelGame game : games) {
             if (game.getGameId().equals(gameid)) {

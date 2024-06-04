@@ -30,7 +30,7 @@ public class topUpService {
     }
     
     public double getCode(String codeNumber,String email,ModelUser user) throws SQLException {   
-        String query = "SELECT value,expireDate,status FROM codegame WHERE codenumber = ?";
+        String query = "SELECT value,status FROM codegame WHERE codenumber = ?";
         PreparedStatement val = con.prepareStatement(query);
         val.setString(1, codeNumber);
         ResultSet rs = val.executeQuery();
@@ -45,7 +45,7 @@ public class topUpService {
             }else{
                 JOptionPane.showMessageDialog(null, "Nạp thẻ thành công" + codeNumber + "\nGiá trị: " + value + "VNĐ");
                 topUp(value, email,user);
-                updateCodeGame(codeNumber);
+                updateCodeGame(codeNumber,user.getUserID());
             }
             
             return value;
@@ -59,8 +59,8 @@ public class topUpService {
         PreparedStatement val = con.prepareStatement(query);
         ResultSet rs = val.executeQuery();
     }
-    public void updateCodeGame(String codeNumber)throws SQLException{
-        String query = "Update codeGame set status = 'used' where codeNumber= '"+ codeNumber + "'";
+    public void updateCodeGame(String codeNumber,String userid)throws SQLException{
+        String query = "Update codeGame set status = 'used',userid='"+ userid + "' where codeNumber= '"+ codeNumber + "'";
         PreparedStatement val = con.prepareStatement(query);
         ResultSet rs = val.executeQuery();
     }

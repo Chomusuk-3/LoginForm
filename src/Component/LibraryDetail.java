@@ -29,6 +29,7 @@ import model.ModelCart;
 import java.sql.Blob;
 import model.ModelUser;
 import service.ServiceReview;
+import service.gameService;
 /**
  *
  * @author khoa
@@ -40,6 +41,7 @@ public class LibraryDetail extends javax.swing.JFrame {
     private ModelUser user = new ModelUser();
     private DefaultTableModel model;
     private ServiceReview service = new ServiceReview();
+    private gameService g_service = new gameService();
     public LibraryDetail(ModelGame game,ModelUser user) {
         con = DatabaseConnect.getInstance().getConnection();
         
@@ -673,6 +675,7 @@ public class LibraryDetail extends javax.swing.JFrame {
         String selectedRating = (String) ratingSelected.getSelectedItem();
         int rating = Integer.parseInt(selectedRating);
         service.saveReviewSection(user.getUserID(), game.getGameId(), comment, rating);
+        dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void RedayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RedayActionPerformed
@@ -688,6 +691,8 @@ public class LibraryDetail extends javax.swing.JFrame {
             // Xử lý lỗi nếu không thể mở URL
             ex.printStackTrace();
         }
+        g_service.downloadUpdate(game.getGameId());
+        dispose();
     }//GEN-LAST:event_downloadBtnActionPerformed
 
     /**

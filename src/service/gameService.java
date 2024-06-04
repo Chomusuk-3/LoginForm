@@ -12,6 +12,7 @@ import java.util.Date;
 import javax.swing.ImageIcon;
 import model.ModelGame;
 import java.sql.Blob;
+import java.sql.PreparedStatement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -47,21 +48,52 @@ public class gameService {
                     imageIcon = new ImageIcon(image);
                 }   
                 game = new ModelGame(gameID,description,gameName,developerid,rating,reday,agelimit,download,gamesize,price,imageIcon);
-//            System.out.println("Game ID: " + gameID);
-//System.out.println("Game Name: " + gameName);
-//System.out.println("Description: " + description);
-//System.out.println("Developer ID: " + developerid);
-//System.out.println("Rating: " + rating);
-//System.out.println("Release Day: " + reday);
-//System.out.println("Age Limit: " + agelimit);
-//System.out.println("Downloaded: " + download);
-//System.out.println("Game Size: " + gamesize);
-//System.out.println("Price: " + price);
             } catch (IOException ex) {
                 Logger.getLogger(gameService.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return game;
+    }
+    public boolean libraryCheck(String userid,String gameid){
+        boolean exists = false;
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            String query = "SELECT COUNT(*) AS count FROM library WHERE userid = ? and gameid = ?";
+            statement = con.prepareStatement(query);
+            statement.setString(1, userid);
+            statement.setString(2, gameid);
+            resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                int count = resultSet.getInt("count");
+                if (count > 0) {
+                    exists = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (resultSet != null) resultSet.close();
+                if (statement != null) statement.close();
+                if (connection != null) connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return exists;
+    }
+    public void downloadUpdate(String gameID){
+        try {
+            String query = "Update games set downloaded = downloaded + 1   where gameid= '"+ gameID + "'";
+            PreparedStatement val = con.prepareStatement(query);
+            ResultSet rs = val.executeQuery();
+        } catch (SQLException ex) {
+            Logger.getLogger(gameService.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
    
 }

@@ -16,12 +16,14 @@ import form.Form_4;
 import form.Purchased;
 import form.GameStore;
 import form.LibraryForm;
+import form.StatisticForm;
 import form.topup_form;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -40,6 +42,7 @@ public class InterfaceDA extends javax.swing.JFrame {
         System.out.println(user.getRole());
         this.user = user;
         this.Cart = Cart;
+        Cart.setUserID(user.getUserID());
         initComponents();
         getContentPane().setBackground(new Color(0,0,0,0));
         menu1.menuSetuser(user);
@@ -74,6 +77,12 @@ public class InterfaceDA extends javax.swing.JFrame {
                 }else if(index == 13){
                     dispose();
                     new main().setVisible(true);
+                }else{
+                    try {
+                        setForm(new  StatisticForm(user));
+                    } catch (SQLException ex) {
+                        Logger.getLogger(InterfaceDA.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });

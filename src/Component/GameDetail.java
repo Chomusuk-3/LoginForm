@@ -24,6 +24,7 @@ import javax.swing.table.DefaultTableModel;
 import model.ModelGame;
 import model.ModelCart;
 import java.sql.Blob;
+import service.gameService;
 /**
  *
  * @author khoa
@@ -33,6 +34,7 @@ public class GameDetail extends javax.swing.JFrame {
     private ModelGame game = null;
     private ModelCart Cart = new ModelCart();
     private DefaultTableModel model;
+    private gameService service = new gameService();
     public GameDetail(ModelGame game,ModelCart Cart) {
         con = DatabaseConnect.getInstance().getConnection();
         
@@ -655,7 +657,10 @@ public class GameDetail extends javax.swing.JFrame {
     }//GEN-LAST:event_RatingActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        if(Cart.hasGame(game.getGameId())){
+        if(service.libraryCheck(Cart.getUserID(), game.getGameId())){
+            JOptionPane.showMessageDialog(null, "Game đã có trong thư viện");
+        }
+        else if(Cart.hasGame(game.getGameId())){
             JOptionPane.showMessageDialog(null, "Game đã được thêm vào giỏ hàng.");
         }
         else{
@@ -675,27 +680,6 @@ public class GameDetail extends javax.swing.JFrame {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        try {
-//            for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
-//                if ("Nimbus".equals(info.getName())) {
-//                    UIManager.setLookAndFeel(info.getClassName());
-//                    break;
-//                }
-//            }
-//        } catch (ClassNotFoundException ex) {
-//            java.util.logging.Logger.getLogger(GameDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (InstantiationException ex) {
-//            java.util.logging.Logger.getLogger(GameDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (IllegalAccessException ex) {
-//            java.util.logging.Logger.getLogger(GameDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        } catch (UnsupportedLookAndFeelException ex) {
-//            java.util.logging.Logger.getLogger(GameDetail.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-//        }
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//            public void run() {
-//                new GameDetail().setVisible(true);
-//            }
-//        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
