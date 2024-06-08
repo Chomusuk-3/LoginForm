@@ -16,14 +16,14 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.ModelUser;
 import service.topUpService;
-
+import java.sql.*;
 /**
  *
  * @author khoa
  */
 public class ServiceVoucher {
     private final Connection con;
-
+    CallableStatement callableStatement = null;
     public ServiceVoucher() {
         con = DatabaseConnect.getInstance().getConnection();
     }
@@ -50,9 +50,11 @@ public class ServiceVoucher {
 //        ResultSet rs = val.executeQuery();
 //    }
     public void updateCoupon(String couponNumber)throws SQLException{
-        String query = "Update coupon set used=used + 1 where couponNumber= '"+ couponNumber + "'";
-        PreparedStatement val = con.prepareStatement(query);
-        ResultSet rs = val.executeQuery();
+        String sql = "{CALL increment_coupon_usage(?)}";
+        callableStatement = con.prepareCall(sql);
+        callableStatement.setString(1, couponNumber); // ID của coupon cần cập nhật
+        callableStatement.execute();
+        System.out.println("Coupon usage incremented successfully.");
     }
     public boolean couponCheck(String couponNumber) throws SQLException{
         String query = "SELECT value,status FROM coupon WHERE CouponNumber = ?";

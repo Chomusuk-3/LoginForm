@@ -5,6 +5,7 @@
 package service;
 
 import connection.DatabaseConnect;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,7 +25,7 @@ import service.topUpService;
  */
 public class topUpService {
     private final Connection con;
-
+    CallableStatement callableStatement = null;
     public topUpService() {
         con = DatabaseConnect.getInstance().getConnection();
     }
@@ -39,13 +40,12 @@ public class topUpService {
             // Retrieve the value from the result set
             double value = Long.parseLong(rs.getString("value"));
             String status = rs.getString("status");
-            if(status.equals("used")){
+            if(status.equals("Used")){
                JOptionPane.showMessageDialog(null, "Thẻ đã được sử dụng");
                 
             }else{
                 JOptionPane.showMessageDialog(null, "Nạp thẻ thành công" + codeNumber + "\nGiá trị: " + value + "VNĐ");
-                topUp(value, email,user);
-                updateCodeGame(codeNumber,user.getUserID());
+                topUp(codeNumber,user.getUserID());
             }
             
             return value;
@@ -54,15 +54,12 @@ public class topUpService {
         }
         return 0L;
     }
-    public void topUp(double value,String email,ModelUser user)throws SQLException{
-        String query = "Update users set balance = balance + '"+ value +"' where email= '"+ email + "'";
-        PreparedStatement val = con.prepareStatement(query);
-        ResultSet rs = val.executeQuery();
-    }
-    public void updateCodeGame(String codeNumber,String userid)throws SQLException{
-        String query = "Update codeGame set status = 'used',userid='"+ userid + "' where codeNumber= '"+ codeNumber + "'";
-        PreparedStatement val = con.prepareStatement(query);
-        ResultSet rs = val.executeQuery();
+    public void topUp(String couponNumber,String userid)throws SQLException{
+        String sql = "{CALL code_balance_update(?,?)}";
+        callableStatement = con.prepareCall(sql);
+        callableStatement.setString(1, couponNumber); // ID của coupon cần cập nhật
+        callableStatement.setString(2, userid);
+        callableStatement.execute();
     }
     public static String generateRandomCode(int length) {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
