@@ -3,6 +3,7 @@ package form;
 
 import Component.Edit;
 import Component.Message;
+import com.formdev.flatlaf.FlatLightLaf;
 import java.awt.Color;
 import java.awt.Container;
 import java.awt.Font;
@@ -35,11 +36,7 @@ public class UserForm extends javax.swing.JPanel {
     Edit edit = new Edit();
     private ServiceUser service;
     public UserForm(ModelUser user)  {
-        try {
-        UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-        } catch (Exception e) {
-        e.printStackTrace();
-        }
+        FlatLightLaf.setup();
         String outputString;
         service = new ServiceUser();
         initComponents();

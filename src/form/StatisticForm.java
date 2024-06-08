@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package form;
+import com.formdev.flatlaf.FlatLightLaf;
 import connection.DatabaseConnect;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -36,47 +37,61 @@ import model.ModelGame;
 import model.ModelUser;
 import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.chart.ui.RectangleEdge;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+
 import service.gameService;
 public class StatisticForm extends javax.swing.JPanel {
     private ModelUser user = new ModelUser();
     private final Connection con;
+    private Swing.Table table1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     public StatisticForm(ModelUser user) throws SQLException {
         this.user = user;
+        FlatLightLaf.setup();
         con = DatabaseConnect.getInstance().getConnection();
         initComponents();
         createChartPanel();
     }
-
     private void createChartPanel() throws SQLException {
-        // Create dataset
-        CategoryDataset dataset;
-        if(user.getRole().equals("Developer")){
-            dataset = createDatasetDev();
-        }
-        else if(user.getRole().equals("Admin")){
-            dataset = createDatasetAdmin();
-        }else{
-            dataset = createDatasetUser();
-        }
-        // Create chart
-        JFreeChart chart = ChartFactory.createBarChart(
-                "Thống kê chi tiêu 2024", // Chart title
-                "Month", // X-Axis Label
-                "Value", // Y-Axis Label
-                dataset, // Dataset
-                PlotOrientation.VERTICAL,
-                true, true, false
-        );
+    // Load the table first
+    
 
-        // Customize the chart
-        customizeChart(chart);
-
-        // Create ChartPanel and add it to the JPanel
-        ChartPanel chartPanel = new ChartPanel(chart);
-        chartPanel.setPreferredSize(new Dimension(800, 600));
-        this.setLayout(new BorderLayout());
-        this.add(chartPanel, BorderLayout.CENTER);
+    // Create dataset
+    CategoryDataset dataset;
+    if(user.getRole().equals("Developer")){
+        dataset = createDatasetDev();
     }
+    else if(user.getRole().equals("Admin")){
+        dataset = createDatasetAdmin();
+    }else{
+        dataset = createDatasetUser();
+    }
+    
+    // Create chart
+    JFreeChart chart = ChartFactory.createBarChart(
+            "Thống kê chi tiêu 2024", // Chart title
+            "Month", // X-Axis Label
+            "Value", // Y-Axis Label
+            dataset, // Dataset
+            PlotOrientation.VERTICAL,
+            true, true, false
+    );
+
+    // Customize the chart
+    customizeChart(chart);
+
+    // Create ChartPanel and add it to the JScrollPane
+    ChartPanel chartPanel = new ChartPanel(chart);
+    chartPanel.setPreferredSize(new Dimension(400, 300));
+    chartPanel.setBackground(Color.WHITE); // Set background color
+    this.setLayout(new BorderLayout());
+    this.add(chartPanel, BorderLayout.CENTER);
+}
+
 
     private void customizeChart(JFreeChart chart) {
         // Set chart background color
@@ -193,19 +208,16 @@ private CategoryDataset createDatasetAdmin() throws SQLException {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
-        );
+        jButton1 = new javax.swing.JButton();
+
+        setLayout(new java.awt.BorderLayout());
+
+        jButton1.setText("Years");
+        add(jButton1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 }

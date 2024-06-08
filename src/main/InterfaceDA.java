@@ -16,6 +16,7 @@ import form.Form_4;
 import form.Purchased;
 import form.GameStore;
 import form.LibraryForm;
+import form.ReportForm;
 import form.StatisticForm;
 import form.topup_form;
 import java.awt.Color;
@@ -77,12 +78,15 @@ public class InterfaceDA extends javax.swing.JFrame {
                 }else if(index == 13){
                     dispose();
                     new main().setVisible(true);
-                }else{
+                }else if(index == 12){
                     try {
                         setForm(new  StatisticForm(user));
                     } catch (SQLException ex) {
                         Logger.getLogger(InterfaceDA.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }
+                else{
+                    setForm(new  ReportForm(user));
                 }
             }
         });

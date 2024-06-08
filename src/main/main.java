@@ -8,6 +8,7 @@ import Component.PanelLoading;
 import Component.PanelLoginAndRegister;
 import Component.PanelVerifyCode;
 import Component.PanelVerifyCode2;
+import com.formdev.flatlaf.FlatLightLaf;
 import connection.DatabaseConnect;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -49,6 +50,7 @@ public class main extends javax.swing.JFrame {
     }
     
     private void init(){
+        FlatLightLaf.setup();
         service = new ServiceUser();
         layout = new MigLayout("fill, insets 0");
         cover = new PanelCover();

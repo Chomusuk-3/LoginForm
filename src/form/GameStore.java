@@ -209,8 +209,11 @@ public class GameStore extends javax.swing.JPanel {
         storeTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(storeTable1);
         if (storeTable1.getColumnModel().getColumnCount() > 0) {
-            storeTable1.getColumnModel().getColumn(0).setMinWidth(0);
-            storeTable1.getColumnModel().getColumn(0).setMaxWidth(5);
+            storeTable1.getColumnModel().getColumn(0).setResizable(false);
+            storeTable1.getColumnModel().getColumn(1).setResizable(false);
+            storeTable1.getColumnModel().getColumn(2).setResizable(false);
+            storeTable1.getColumnModel().getColumn(3).setResizable(false);
+            storeTable1.getColumnModel().getColumn(4).setResizable(false);
         }
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 36)); // NOI18N
