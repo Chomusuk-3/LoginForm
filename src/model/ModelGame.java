@@ -2,13 +2,20 @@
 package model;
 
 import com.sun.mail.handlers.image_gif;
+import connection.DatabaseConnect;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.*;
 
 public class ModelGame {
-
+    CallableStatement callableStatement = null;
+    private Connection con = DatabaseConnect.getInstance().getConnection();
     public ModelGame() {
     }
 
@@ -54,7 +61,18 @@ public class ModelGame {
     }
 
     public double getPrice() {
-        return price;
+        try {
+            String sql = "{ ? = call game_price_cal(?) }";
+            callableStatement = con.prepareCall(sql);
+            callableStatement.registerOutParameter(1, java.sql.Types.DOUBLE);
+            callableStatement.setString(2, gameId);
+            callableStatement.execute();
+            double result = callableStatement.getDouble(1);
+            return result;
+        } catch (SQLException ex) {
+            Logger.getLogger(ModelGame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
     }
 
     public Double getRating() {

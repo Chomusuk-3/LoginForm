@@ -76,6 +76,7 @@ public class ServicePayment {
             val.setString(1, PaymemtID);
             val.setString(2, game.getGameId());
             val.setDouble(3, game.getPrice());
+            System.out.println(game.getPrice());
             ResultSet rs = val.executeQuery();
         } catch (SQLException ex) {
             Logger.getLogger(ServicePayment.class.getName()).log(Level.SEVERE, null, ex);

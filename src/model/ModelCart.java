@@ -66,6 +66,13 @@ public class ModelCart {
         DecimalFormat df = new DecimalFormat("#.##");
         Total = Double.valueOf(df.format(Total)); 
     }
+    public void reloadCart(){
+        Total = 0;       
+        for (ModelGame game : games) {
+            Total+= game.getPrice();
+        }
+        setgrantTotal();
+    }
     public ArrayList<ModelGame> getGames(){
         return games;
     }
@@ -73,7 +80,6 @@ public class ModelCart {
         return Total;
     }
     public void printAllIds() {
-        System.out.println("day la cart");
         for (ModelGame game : games) {
             System.out.println(game.getGameName());
         }

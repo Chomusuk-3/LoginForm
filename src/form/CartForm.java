@@ -5,6 +5,7 @@
 package form;
 
 import Component.GameDetail;
+import com.formdev.flatlaf.FlatLightLaf;
 import connection.DatabaseConnect;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -29,7 +30,7 @@ import service.ServicePayment;
  * @author khoa
  */
 public class CartForm extends javax.swing.JPanel {
-
+    
     private final Connection con;
     private DefaultTableModel model;
     private ServiceVoucher service;
@@ -41,7 +42,9 @@ public class CartForm extends javax.swing.JPanel {
      * Creates new form GameStore
      */
     public CartForm(ModelCart Cart,ModelUser user) {
+        FlatLightLaf.setup();
         this.Cart = Cart;
+        Cart.reloadCart();
         this.user = user;
         service = new ServiceVoucher();
         serviceP = new ServicePayment();
@@ -323,7 +326,9 @@ public class CartForm extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        paybtn.setBackground(new java.awt.Color(0, 102, 255));
         paybtn.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        paybtn.setForeground(new java.awt.Color(255, 255, 255));
         paybtn.setText("Thanh toán");
         paybtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -331,7 +336,9 @@ public class CartForm extends javax.swing.JPanel {
             }
         });
 
+        paybtn1.setBackground(new java.awt.Color(255, 51, 51));
         paybtn1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        paybtn1.setForeground(new java.awt.Color(255, 255, 255));
         paybtn1.setText("Xóa giỏ hàng");
         paybtn1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -441,13 +448,14 @@ public class CartForm extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Giỏ hàng rỗng!!");
         }
         else{
+            Cart.reloadCart();
             double subTotal = Cart.getTotal();
             double Discount = Cart.getDiscount();
             double grantTotal = Cart.getGrantTotal();
             double userBalance = user.getBalance();
             if(userBalance > grantTotal ){
                 serviceP.MakePayment(user.getUserID(), grantTotal, Discount, subTotal,Cart.getGames());
-                JOptionPane.showMessageDialog(null, "Thanh toán thành công");
+                JOptionPane.showMessageDialog(null, "Thanh toán thành công.\n Đơn hàng trị giá: " + grantTotal + '$');
                 try {
                     service.updateCoupon(CouponNumber);
                 } catch (SQLException ex) {

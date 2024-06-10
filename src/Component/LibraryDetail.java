@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package Component;
+import com.formdev.flatlaf.FlatLightLaf;
 import connection.DatabaseConnect;
 import javax.swing.*;
 import java.awt.Color;
@@ -10,6 +11,7 @@ import java.awt.Desktop;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.io.IOException;
+import static java.lang.Double.parseDouble;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Connection;
@@ -27,9 +29,12 @@ import javax.swing.table.DefaultTableModel;
 import model.ModelGame;
 import model.ModelCart;
 import java.sql.Blob;
+import java.sql.CallableStatement;
+import java.util.UUID;
 import model.ModelUser;
 import service.ServiceReview;
 import service.gameService;
+import java.sql.CallableStatement;
 /**
  *
  * @author khoa
@@ -42,9 +47,10 @@ public class LibraryDetail extends javax.swing.JFrame {
     private DefaultTableModel model;
     private ServiceReview service = new ServiceReview();
     private gameService g_service = new gameService();
+    CallableStatement callableStatement = null;
     public LibraryDetail(ModelGame game,ModelUser user) {
         con = DatabaseConnect.getInstance().getConnection();
-        
+        FlatLightLaf.setup();
         try {
             // Thiết lập Look and Feel theo hệ điều hành đang sử dụng
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -53,11 +59,17 @@ public class LibraryDetail extends javax.swing.JFrame {
         }
         this.game = game;
         this.user = user;
+        
         setTitle("Game Details");
         setLocationRelativeTo(null);       
         initComponents();
         addData();
         loadJFrame();
+        jDesktopPane4.setVisible(false);
+        if(user.getRole().equals("Developer")){
+            jDesktopPane1.setVisible(false);
+            jDesktopPane4.setVisible(true);
+        }
     }
     public void loadJFrame(){
         setLocationRelativeTo(null);  
@@ -71,6 +83,7 @@ public class LibraryDetail extends javax.swing.JFrame {
         size.setText(String.valueOf(game.getSize()));
         Rating.setText(String.valueOf(game.getRating()));
         description.setText(game.getDescription());
+        Price.setText(String.valueOf(game.getPrice()) + '$');
         image.setHorizontalAlignment(JLabel.CENTER);
         image.setVerticalAlignment(JLabel.CENTER);
         
@@ -127,6 +140,12 @@ public class LibraryDetail extends javax.swing.JFrame {
         jLayeredPane8 = new javax.swing.JLayeredPane();
         Rating = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
+        jDesktopPane4 = new javax.swing.JDesktopPane();
+        PriceChange = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        Price = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        priceBtn1 = new javax.swing.JButton();
         jPanel9 = new javax.swing.JPanel();
         jLayeredPane9 = new javax.swing.JLayeredPane();
         jDesktopPane1 = new javax.swing.JDesktopPane();
@@ -339,8 +358,6 @@ public class LibraryDetail extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel7.add(jPanel2);
-
         jPanel5.setBackground(java.awt.Color.white);
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
@@ -442,10 +459,10 @@ public class LibraryDetail extends javax.swing.JFrame {
             .addGroup(jLayeredPane8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jLayeredPane8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Rating, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
+                    .addComponent(Rating)
                     .addGroup(jLayeredPane8Layout.createSequentialGroup()
                         .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 123, Short.MAX_VALUE))))
         );
         jLayeredPane8Layout.setVerticalGroup(
             jLayeredPane8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -467,7 +484,7 @@ public class LibraryDetail extends javax.swing.JFrame {
                     .addComponent(jLayeredPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLayeredPane7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLayeredPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addContainerGap(173, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -481,7 +498,99 @@ public class LibraryDetail extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jPanel7.add(jPanel5);
+        jDesktopPane4.setBackground(java.awt.Color.white);
+        jDesktopPane4.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel11.setForeground(new java.awt.Color(0, 102, 51));
+        jLabel11.setText("Giá:");
+
+        Price.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        Price.setForeground(new java.awt.Color(0, 102, 51));
+        Price.setText("30$");
+
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jLabel13.setText("Điều chỉnh giá game");
+
+        priceBtn1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        priceBtn1.setForeground(new java.awt.Color(0, 0, 0));
+        priceBtn1.setText("Lưu");
+        priceBtn1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                priceBtn1ActionPerformed(evt);
+            }
+        });
+
+        jDesktopPane4.setLayer(PriceChange, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane4.setLayer(jLabel11, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane4.setLayer(Price, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane4.setLayer(jLabel13, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jDesktopPane4.setLayer(priceBtn1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jDesktopPane4Layout = new javax.swing.GroupLayout(jDesktopPane4);
+        jDesktopPane4.setLayout(jDesktopPane4Layout);
+        jDesktopPane4Layout.setHorizontalGroup(
+            jDesktopPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopPane4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jDesktopPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jDesktopPane4Layout.createSequentialGroup()
+                        .addGroup(jDesktopPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jDesktopPane4Layout.createSequentialGroup()
+                                .addComponent(PriceChange)
+                                .addGap(11, 11, 11))
+                            .addGroup(jDesktopPane4Layout.createSequentialGroup()
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(172, 172, 172)))
+                        .addGroup(jDesktopPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(Price, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(priceBtn1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+        jDesktopPane4Layout.setVerticalGroup(
+            jDesktopPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDesktopPane4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jDesktopPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel11)
+                    .addComponent(Price))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel13)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jDesktopPane4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(priceBtn1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(PriceChange))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addContainerGap(65, Short.MAX_VALUE)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(78, 78, 78))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                        .addComponent(jDesktopPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(78, 78, 78))))
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jDesktopPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(9, Short.MAX_VALUE))
+        );
 
         jPanel1.add(jPanel7, java.awt.BorderLayout.CENTER);
 
@@ -495,6 +604,7 @@ public class LibraryDetail extends javax.swing.JFrame {
         jLabel2.setText("Bình luận");
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        jButton1.setForeground(new java.awt.Color(0, 0, 0));
         jButton1.setText("Post ");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -515,6 +625,7 @@ public class LibraryDetail extends javax.swing.JFrame {
         jLabel3.setText("Rating:");
 
         downloadBtn.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        downloadBtn.setForeground(new java.awt.Color(0, 0, 0));
         downloadBtn.setText("Download");
         downloadBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -541,7 +652,7 @@ public class LibraryDetail extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ratingSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 195, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 609, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jDesktopPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(downloadBtn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
@@ -595,11 +706,12 @@ public class LibraryDetail extends javax.swing.JFrame {
             .addGroup(jDesktopPane2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jDesktopPane2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 985, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(jDesktopPane2Layout.createSequentialGroup()
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 207, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         jDesktopPane2Layout.setVerticalGroup(
             jDesktopPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -627,8 +739,8 @@ public class LibraryDetail extends javax.swing.JFrame {
         jLayeredPane9Layout.setVerticalGroup(
             jLayeredPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane9Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jDesktopPane2)
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jDesktopPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jDesktopPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -695,6 +807,23 @@ public class LibraryDetail extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_downloadBtnActionPerformed
 
+    private void priceBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceBtn1ActionPerformed
+        try {
+            Double changed_price = parseDouble(PriceChange.getText());
+            game.setPrice(changed_price);
+            String sql = "{CALL game_price_update(?,?)}";
+            callableStatement = con.prepareCall(sql);
+            callableStatement.setString(1, game.getGameId()); // ID của coupon cần cập nhật
+            callableStatement.setDouble(2, changed_price);
+            callableStatement.execute();
+            Price.setText(String.valueOf(changed_price)+'$');
+            JOptionPane.showMessageDialog(null, "Thay đổi giá game thành công.\n Giá hiện tại là:" + changed_price +'$');
+            PriceChange.setText("");
+        } catch (SQLException ex) {
+            Logger.getLogger(LibraryDetail.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_priceBtn1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -732,6 +861,8 @@ public class LibraryDetail extends javax.swing.JFrame {
     private javax.swing.JTextArea Comment;
     private javax.swing.JTextField Dev;
     private javax.swing.JTextField Name;
+    private javax.swing.JLabel Price;
+    private javax.swing.JTextField PriceChange;
     private javax.swing.JTextField Rating;
     private javax.swing.JTextField Reday;
     private javax.swing.JTextArea description;
@@ -742,8 +873,11 @@ public class LibraryDetail extends javax.swing.JFrame {
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDesktopPane jDesktopPane2;
     private javax.swing.JDesktopPane jDesktopPane3;
+    private javax.swing.JDesktopPane jDesktopPane4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -770,6 +904,7 @@ public class LibraryDetail extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JButton priceBtn1;
     private javax.swing.JComboBox<String> ratingSelected;
     private javax.swing.JTextField size;
     // End of variables declaration//GEN-END:variables
