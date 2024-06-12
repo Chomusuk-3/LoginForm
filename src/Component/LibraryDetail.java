@@ -86,7 +86,8 @@ public class LibraryDetail extends javax.swing.JFrame {
         Price.setText(String.valueOf(game.getPrice()) + '$');
         image.setHorizontalAlignment(JLabel.CENTER);
         image.setVerticalAlignment(JLabel.CENTER);
-        
+        description.setLineWrap(true); // Bật chức năng xuống dòng tự động
+        description.setWrapStyleWord(true);
         ImageIcon originalIcon = game.getImage(); // get the image from the ModelGame object
         if (originalIcon != null) {
             Image originalImage = originalIcon.getImage();

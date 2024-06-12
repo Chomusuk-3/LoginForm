@@ -71,11 +71,10 @@ public class ServicePayment {
     }
     public void MakePaymentDetail(ModelGame game,String PaymemtID){
         try {
-            String query = "insert into PaymentDetail(PaymentID,GameID,total) values(?,?,?)";
+            String query = "insert into PaymentDetail(PaymentID,GameID) values(?,?)";
             PreparedStatement val = con.prepareStatement(query);            
             val.setString(1, PaymemtID);
             val.setString(2, game.getGameId());
-            val.setDouble(3, game.getPrice());
             System.out.println(game.getPrice());
             ResultSet rs = val.executeQuery();
         } catch (SQLException ex) {

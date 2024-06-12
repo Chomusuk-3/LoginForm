@@ -105,8 +105,8 @@ public class GameStore extends javax.swing.JPanel {
             while (rs.next()) {
                 String gameID = rs.getString(1);
                 String gameName = rs.getString(2);
-                String description = rs.getString(4);
-                Double price = rs.getDouble(11);
+                String description = rs.getString(5);
+                String price = rs.getString(11);
                 Blob imageBlob = rs.getBlob(12);
                 ImageIcon imageIcon = null;
 
@@ -125,7 +125,7 @@ public class GameStore extends javax.swing.JPanel {
                 }
 
                 // Use a placeholder image if imageIcon is nul
-                model.addRow(new Object[]{row++, imageIcon != null ? imageIcon : "No image", gameName, description, price,gameID});
+                model.addRow(new Object[]{row++, imageIcon != null ? imageIcon : "No image", gameName, description, price +'$',gameID});
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -151,7 +151,9 @@ public class GameStore extends javax.swing.JPanel {
         }
     };
     storeTable1.setModel(model);
-    storeTable1.getColumnModel().getColumn(0).setPreferredWidth(2);
+    TableColumn column = storeTable1.getColumnModel().getColumn(0); // Assuming "No" is the first column
+    column.setPreferredWidth(5);
+    storeTable1.getColumnModel().getColumn(0).setPreferredWidth(0);
     storeTable1.getColumnModel().getColumn(4).setPreferredWidth(2);
     // Set the custom renderer for the image column
     storeTable1.getColumnModel().getColumn(1).setCellRenderer(new DefaultTableCellRenderer() {
@@ -205,11 +207,14 @@ public class GameStore extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
+        storeTable1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         storeTable1.setRowHeight(100);
         storeTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(storeTable1);
         if (storeTable1.getColumnModel().getColumnCount() > 0) {
-            storeTable1.getColumnModel().getColumn(0).setResizable(false);
+            storeTable1.getColumnModel().getColumn(0).setMinWidth(5);
+            storeTable1.getColumnModel().getColumn(0).setPreferredWidth(5);
+            storeTable1.getColumnModel().getColumn(0).setMaxWidth(5);
             storeTable1.getColumnModel().getColumn(1).setResizable(false);
             storeTable1.getColumnModel().getColumn(2).setResizable(false);
             storeTable1.getColumnModel().getColumn(3).setResizable(false);

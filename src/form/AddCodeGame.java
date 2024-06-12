@@ -3,6 +3,7 @@ package form;
 
 import Component.Message;
 import connection.DatabaseConnect;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,7 +21,7 @@ import javax.swing.JOptionPane;
 
 public class AddCodeGame extends javax.swing.JPanel {
 
-
+    CallableStatement callableStatement = null;
     private Connection con;
     public AddCodeGame() {
         initComponents();
@@ -199,13 +200,16 @@ public class AddCodeGame extends javax.swing.JPanel {
         Double value = Double.valueOf(txtValue.getText());
         con = DatabaseConnect.getInstance().getConnection();
         try {
-            PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Value, Status) VALUES(?,?,CURRENT_DATE,?,?)");
+//            PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Value, Status) VALUES(?,?,CURRENT_DATE,?,?)");
             UUID uuid = UUID.randomUUID();
-            p.setString(1, uuid.toString());
-            p.setString(2, codenum);
-            p.setDouble(3, value);
-            p.setString(4, "Active");
-            p.execute();
+            String sql = "{CALL code_crt(?,?,?)}";
+            String paymentID = UUID.randomUUID().toString();
+            callableStatement = con.prepareCall(sql);              
+            callableStatement.setString(1, uuid.toString());
+            callableStatement.setString(2, codenum);
+            callableStatement.setDouble(3, value);
+            callableStatement.execute();
+//            p.execute();
             JOptionPane.showMessageDialog(null, "Add code success");
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -244,14 +248,16 @@ public class AddCodeGame extends javax.swing.JPanel {
         con = DatabaseConnect.getInstance().getConnection();
         while(cnt != 0){
             try {
-                PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Value, Status) VALUES(?,?,CURRENT_DATE,?,?)");
+//                PreparedStatement p = con.prepareStatement("INSERT INTO CODEGAME(CODEID, CODENUMBER, CreateDate, Value, Status) VALUES(?,?,CURRENT_DATE,?,?)");
                 codenum = generateCodeNum();
                 UUID uuid = UUID.randomUUID();
-                p.setString(1, uuid.toString());
-                p.setString(2, codenum);
-                p.setDouble(3, value);
-                p.setString(4, "Active");
-                p.execute();
+                String sql = "{CALL code_crt(?,?,?)}";
+                String paymentID = UUID.randomUUID().toString();
+                callableStatement = con.prepareCall(sql);              
+                callableStatement.setString(1, uuid.toString());
+                callableStatement.setString(2, codenum);
+                callableStatement.setDouble(3, value);
+                callableStatement.execute();
                 cnt = cnt - 1;
             } catch (SQLException ex) {
                 ex.printStackTrace();

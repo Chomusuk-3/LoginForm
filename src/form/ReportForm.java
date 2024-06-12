@@ -136,7 +136,7 @@ public class ReportForm extends javax.swing.JPanel {
                 grow = (sum - prevsum)/prevsum*100;
             }
             ResultSet rs = con.createStatement().executeQuery(
-            "SELECT gamename,nvl(SUM(total),0)*0.8,nvl(count(*),0) FROM games JOIN paymentdetail ON games.gameid=paymentdetail.gameid  JOIN payment ON paymentdetail.paymentid =   payment.paymentid WHERE games.userid = '"+User.getUserID()+"' AND EXTRACT(YEAR FROM datecreate) = '"+year2+"' GROUP BY gamename");
+            "SELECT gamename,nvl(SUM(total),0)*0.8,nvl(count(*),0) FROM games left JOIN paymentdetail ON games.gameid=paymentdetail.gameid  JOIN payment ON paymentdetail.paymentid =   payment.paymentid WHERE games.userid = '"+User.getUserID()+"' AND EXTRACT(YEAR FROM datecreate) = '"+year2+"' GROUP BY gamename");
             int row = 1;
             if(sum == 0){
                 JOptionPane.showMessageDialog(null, "Không có dữ liệu");

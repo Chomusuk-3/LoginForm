@@ -2,6 +2,7 @@
 package form;
 
 import connection.DatabaseConnect;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -12,7 +13,7 @@ import javax.swing.JOptionPane;
 
 
 public class AddCoupon extends javax.swing.JPanel {
-
+    CallableStatement callableStatement = null;
      private Connection con;
     public AddCoupon() {
         initComponents();
@@ -132,15 +133,17 @@ public class AddCoupon extends javax.swing.JPanel {
         int totaluse = Integer.parseInt(txtTotalUse.getText());
         con = DatabaseConnect.getInstance().getConnection();
          try {
-             PreparedStatement p = con.prepareStatement("INSERT INTO COUPON(CouponID, CouponNumber, Value, CreateDate, Total, Status) VALUES (?,?,?,CURRENT_DATE,?,?)");
+//             PreparedStatement p = con.prepareStatement("INSERT INTO COUPON(CouponID, CouponNumber, Value, CreateDate, Total, Status) VALUES (?,?,?,CURRENT_DATE,?,?)");
              UUID uuid = UUID.randomUUID();
-             p.setString(1, uuid.toString());
-             p.setString(2, couponcode);
-             p.setDouble(3, value);
-             p.setInt(4, totaluse);
-             p.setString(5, "Active");
-             p.execute();
-             JOptionPane.showMessageDialog(null, "Add coupon success");
+            String sql = "{CALL coupon_crt(?,?,?,?)}";
+            String paymentID = UUID.randomUUID().toString();
+            callableStatement = con.prepareCall(sql);              
+            callableStatement.setString(1, uuid.toString());
+            callableStatement.setString(2, couponcode);
+            callableStatement.setDouble(3, value);
+            callableStatement.setDouble(4, totaluse);
+            callableStatement.execute();
+            JOptionPane.showMessageDialog(null, "Add coupon success");
          } catch (SQLException ex) {
              ex.printStackTrace();
          }

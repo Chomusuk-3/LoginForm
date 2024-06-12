@@ -148,7 +148,7 @@ private CategoryDataset createDatasetUser() throws SQLException {
         dataset.addValue(grantotal, "Số tiền bỏ ra", month);
     }
     
-    ResultSet rs2 = con.createStatement().executeQuery("WITH months AS (SELECT LEVEL AS month FROM DUAL CONNECT BY LEVEL <= 12) SELECT  m.month, NVL(p.sum_grandtotal, 0) AS sum_grandtotal  FROM months m LEFT JOIN (SELECT  EXTRACT(MONTH FROM useddate) AS month,SUM(value) AS sum_grandtotal FROM codegame WHERE EXTRACT(YEAR FROM useddate) = 2024 AND status = 'used' and userid = '" + userid + "' GROUP BY  EXTRACT(MONTH FROM useddate) ) p ON m.month = p.month ORDER BY m.month");
+    ResultSet rs2 = con.createStatement().executeQuery("WITH months AS (SELECT LEVEL AS month FROM DUAL CONNECT BY LEVEL <= 12) SELECT  m.month, NVL(p.sum_grandtotal, 0) AS sum_grandtotal  FROM months m LEFT JOIN (SELECT  EXTRACT(MONTH FROM useddate) AS month,SUM(value) AS sum_grandtotal FROM codegame WHERE EXTRACT(YEAR FROM useddate) = 2024 AND status = 'Used' and userid = '" + userid + "' GROUP BY  EXTRACT(MONTH FROM useddate) ) p ON m.month = p.month ORDER BY m.month");
     while (rs2.next()) {
         Double grantotal = rs2.getDouble("sum_grandtotal"); 
         String month = rs2.getString("month"); 
